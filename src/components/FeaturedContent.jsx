@@ -1,0 +1,33 @@
+import { useState, useEffect } from 'react'
+import ContentCard from './ContentCard'
+import contentsData from '../data/contents'
+
+const FeaturedContent = () => {
+  const [contents, setContents] = useState([])
+
+  useEffect(() => {
+    // Sementara pakai data statis, nanti bisa fetch dari API
+    setContents(contentsData)
+  }, [])
+
+  return (
+    <>
+      <div className="section-header">
+        <h2>Materi Edukasi Unggulan</h2>
+        <p>Pilih dari berbagai format pembelajaran yang sesuai dengan gaya belajar Anda</p>
+      </div>
+      <div className="content-grid" id="featured-content">
+        {contents.map(content => (
+          <ContentCard 
+            key={content.id} 
+            content={content} 
+            showConfidence={content.recommended} 
+            onClick={() => alert(`Membuka: ${content.title}`)} 
+          />
+        ))}
+      </div>
+    </>
+  )
+}
+
+export default FeaturedContent

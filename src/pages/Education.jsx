@@ -1,0 +1,85 @@
+import { useState, useEffect } from 'react'
+import ContentCard from '../components/ContentCard'
+import contentsData from '../data/contents'
+
+const Education = () => {
+  const [contents, setContents] = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [search, setSearch] = useState('')
+  const [filterType, setFilterType] = useState('Semua Format')
+  const [filterTopic, setFilterTopic] = useState('Semua Topik')
+
+  useEffect(() => {
+    setContents(contentsData)
+    setFiltered(contentsData)
+  }, [])
+
+  useEffect(() => {
+    let result = contents
+    if (search) {
+      result = result.filter(c => c.title.toLowerCase().includes(search.toLowerCase()))
+    }
+    if (filterType !== 'Semua Format') {
+      result = result.filter(c => c.type === filterType.toLowerCase())
+    }
+    // Topic filter bisa ditambahkan jika data punya properti topik, sementara diabaikan
+    setFiltered(result)
+  }, [search, filterType, filterTopic, contents])
+
+  return (
+    <>
+      <div className="section-header">
+        <h2>📚 Materi Edukasi</h2>
+        <p>Jelajahi konten rehabilitasi narkoba sesuai kebutuhan Anda</p>
+      </div>
+
+      {/* Filter Bar */}
+      <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius)', marginBottom: '2rem', boxShadow: 'var(--shadow)' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <input 
+            type="text" 
+            placeholder="🔍 Cari materi..." 
+            style={{ flex: 1, minWidth: '200px', padding: '0.75rem', border: '2px solid #e5e7eb', borderRadius: '8px' }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          
+          <select 
+            style={{ padding: '0.75rem', border: '2px solid #e5e7eb', borderRadius: '8px' }}
+            value={filterTopic}
+            onChange={(e) => setFilterTopic(e.target.value)}
+          >
+            <option>Semua Topik</option>
+            <option>Pengenalan</option>
+            <option>Dampak Kesehatan</option>
+            <option>Terapi</option>
+            <option>Keluarga</option>
+          </select>
+          
+          <select 
+            style={{ padding: '0.75rem', border: '2px solid #e5e7eb', borderRadius: '8px' }}
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option>Semua Format</option>
+            <option>Video</option>
+            <option>Artikel</option>
+            <option>Infografis</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="content-grid" id="education-content">
+        {filtered.map(content => (
+          <ContentCard 
+            key={content.id} 
+            content={content} 
+            onClick={() => alert(`Membuka: ${content.title}`)} 
+          />
+        ))}
+      </div>
+    </>
+  )
+}
+
+export default Education
