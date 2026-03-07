@@ -3,12 +3,13 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../context/ToastContext'
 import ContentCard from '../components/ContentCard'
-import contentsData from '../data/contents'
+import ContentDetailModal from '../components/ContentDetailModal'
+import { getContents, getRecommendations } from '../services/api'
 import questionsData from '../data/questions'
-import ContentDetailModal from '../components/ContentDetailModal';
 
 // ==================== SIDEBAR ====================
 const Sidebar = ({ activeTab, setActiveTab, user }) => {
+  const isGroupA = user?.group === 'A'
   return (
     <aside className="sidebar">
       <div className="user-profile">
@@ -17,13 +18,17 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
         </div>
         <div className="user-name" id="dashboardName">{user?.nama || 'Andi Wijaya'}</div>
         <div className="user-group" id="dashboardGroup">
-          {user?.group === 'A' ? 'Kelompok A - RF Rekomendasi' : 'Kelompok B - Akses Bebas'}
+          {isGroupA ? 'Kelompok A - Rekomendasi Personal (Random Forest)' : 'Kelompok B - Akses Bebas (Kontrol)'}
         </div>
       </div>
       
       <ul className="sidebar-menu">
         <li><a href="#" className={activeTab === 'overview' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('overview') }}>📊 Overview</a></li>
-        <li><a href="#" className={activeTab === 'learning' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('learning') }}>📚 Learning Path</a></li>
+        {isGroupA ? (
+          <li><a href="#" className={activeTab === 'recommendations' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('recommendations') }}>🤖 Rekomendasi</a></li>
+        ) : (
+          <li><a href="#" className={activeTab === 'all' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('all') }}>📚 Semua Materi</a></li>
+        )}
         <li><a href="#" className={activeTab === 'progress' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('progress') }}>📈 Progress</a></li>
         <li><a href="#" className={activeTab === 'achievements' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('achievements') }}>🏆 Achievements</a></li>
         <li><a href="#" className={activeTab === 'posttest' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('posttest') }}>📝 Post-Test</a></li>
@@ -33,8 +38,8 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
   )
 }
 
-// ==================== DASHBOARD A ====================
-const DashboardA = ({ recommended, other, onCardClick }) => {
+// ==================== DASHBOARD A - OVERVIEW ====================
+const DashboardAOverview = ({ recommended, other, onCardClick }) => {
   return (
     <>
       <h2 style={{ marginBottom: '1.5rem' }}>Rekomendasi Personal Untukmu</h2>
@@ -62,8 +67,8 @@ const DashboardA = ({ recommended, other, onCardClick }) => {
   )
 }
 
-// ==================== DASHBOARD B ====================
-const DashboardB = ({ contents, onCardClick }) => {
+// ==================== DASHBOARD B - OVERVIEW ====================
+const DashboardBOverview = ({ contents, onCardClick }) => {
   return (
     <>
       <h2 style={{ marginBottom: '1.5rem' }}>Semua Materi Edukasi</h2>
@@ -80,161 +85,67 @@ const DashboardB = ({ contents, onCardClick }) => {
   )
 }
 
-// ==================== LEARNING PATH ====================
-const LearningPath = ({ user }) => {
-  const { showToast } = useToast()
-  const isGroupA = user?.group === 'A'
-
-  const modules = [
-    {
-      id: 1,
-      title: "Pengenalan Rehabilitasi",
-      desc: "Memahami konsep dasar dan tahapan rehabilitasi",
-      duration: "15 menit",
-      type: "video",
-      icon: "🎥",
-      category: "Fundamental",
-      status: "completed",
-      progress: 100,
-      day: 1
-    },
-    {
-      id: 2,
-      title: "Dampak Narkoba pada Kesehatan",
-      desc: "Efek jangka pendek dan panjang penggunaan narkoba",
-      duration: "10 menit",
-      type: "artikel",
-      icon: "📄",
-      category: "Kesehatan",
-      status: "active",
-      progress: 60,
-      day: 1
-    },
-    {
-      id: 3,
-      title: "Jenis-Jenis Narkoba",
-      desc: "Klasifikasi narkoba berdasarkan efek dan bahaya",
-      duration: "8 menit",
-      type: "infografis",
-      icon: "📊",
-      category: "Pengetahuan",
-      status: "locked",
-      progress: 0,
-      day: 2
-    },
-    {
-      id: 4,
-      title: "Terapi Kognitif Perilaku",
-      desc: "Metode CBT dalam rehabilitasi",
-      duration: "20 menit",
-      type: "video",
-      icon: "🎥",
-      category: "Terapi",
-      status: "locked",
-      progress: 0,
-      day: 2
-    },
-    {
-      id: 5,
-      title: "Peran Keluarga",
-      desc: "Dukungan keluarga untuk kesembuhan",
-      duration: "12 menit",
-      type: "artikel",
-      icon: "📄",
-      category: "Dukungan",
-      status: "locked",
-      progress: 0,
-      day: 3
-    }
-  ]
-
-  const completedCount = modules.filter(m => m.status === 'completed').length
-  const totalMinutes = modules.filter(m => m.status !== 'locked').reduce((acc, m) => acc + parseInt(m.duration), 0)
-  const streak = 3
-
-  const handleModuleClick = (status, title) => {
-    if (status === 'locked') showToast('🔒 Selesaikan modul sebelumnya')
-    else showToast(`Membuka: ${title}`)
-  }
-
+// ==================== REKOMENDASI PAGE (khusus Grup A) ====================
+const RecommendationsPage = ({ recommendations, onCardClick }) => {
   return (
-    <div className="learning-path-modern">
-      <div className="path-header-modern">
-        <div className="path-title">
-          <h2>📚 Learning Path</h2>
-          <p className="path-subtitle">{isGroupA ? 'Direkomendasikan oleh Random Forest' : 'Jalur belajar standar'}</p>
-        </div>
-        <div className="path-stats-modern">
-          <div className="stat-badge">
-            <span className="stat-value">{completedCount}/{modules.length}</span>
-            <span className="stat-label">Modul Selesai</span>
-          </div>
-          <div className="stat-badge">
-            <span className="stat-value">{totalMinutes}</span>
-            <span className="stat-label">Menit Belajar</span>
-          </div>
-          <div className="stat-badge">
-            <span className="stat-value">{streak}</span>
-            <span className="stat-label">Hari Streak</span>
-          </div>
-        </div>
-      </div>
-
-      {isGroupA && (
-        <div className="rf-insight-modern">
-          <div className="insight-icon">🤖</div>
-          <div className="insight-content">
-            <h4>Random Forest Insights</h4>
-            <p>Berdasarkan profil Anda (usia {user?.usia || '-'}, pendidikan {user?.pendidikan || '-'}), sistem merekomendasikan prioritas pada modul <strong>Dampak Narkoba</strong> dan <strong>Terapi Kognitif</strong>.</p>
-          </div>
-        </div>
-      )}
-
-      <div className="timeline-modern">
-        {modules.map((mod, index) => {
-          const isLast = index === modules.length - 1
-          return (
-            <div key={mod.id} className={`timeline-step ${mod.status}`} onClick={() => handleModuleClick(mod.status, mod.title)}>
-              <div className="step-connector">
-                <div className={`step-dot ${mod.status}`}>
-                  {mod.status === 'completed' ? '✅' : mod.status === 'active' ? '▶️' : '🔒'}
-                </div>
-                {!isLast && <div className="step-line"></div>}
-              </div>
-              <div className={`step-card ${mod.status}`}>
-                <div className="step-icon">{mod.icon}</div>
-                <div className="step-content">
-                  <div className="step-header">
-                    <h3>{mod.title}</h3>
-                    <span className={`step-badge ${mod.type}`}>{mod.type}</span>
-                  </div>
-                  <p className="step-desc">{mod.desc}</p>
-                  <div className="step-meta">
-                    <span>⏱️ {mod.duration}</span>
-                    <span>📂 {mod.category}</span>
-                  </div>
-                  {mod.status !== 'locked' && (
-                    <div className="step-progress">
-                      <div className="progress-bar-modern">
-                        <div className="progress-fill-modern" style={{ width: `${mod.progress}%` }}></div>
-                      </div>
-                      <span className="progress-text">{mod.progress}%</span>
-                    </div>
-                  )}
-                  {mod.status === 'active' && <button className="btn-continue-modern">Lanjutkan →</button>}
-                  {mod.status === 'completed' && <span className="completed-badge">Selesai</span>}
-                </div>
-              </div>
+    <div className="recommendations-page">
+      <h2>🤖 Semua Rekomendasi (Random Forest)</h2>
+      <p style={{ marginBottom: '1.5rem', color: 'var(--gray)' }}>
+        Berikut adalah semua materi yang direkomendasikan untuk Anda, diurutkan dari yang paling cocok. 
+        Setiap materi disertai dengan confidence score dan alasan rekomendasi berdasarkan profil Anda.
+      </p>
+      <div className="content-grid">
+        {recommendations.map(item => (
+          <div key={item.materi.id} className="recommendation-item">
+            <ContentCard 
+              content={item.materi} 
+              showConfidence={true}
+              onClick={() => onCardClick(item.materi)}
+            />
+            <div className="recommendation-reason" style={{ 
+              marginTop: '0.5rem', 
+              fontSize: '0.9rem', 
+              color: 'var(--gray)', 
+              background: '#f0f9ff', 
+              padding: '0.75rem', 
+              borderRadius: '8px',
+              borderLeft: '4px solid var(--accent)'
+            }}>
+              <strong>🧠 Alasan:</strong> {item.reason}
             </div>
-          )
-        })}
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
 // ==================== PROGRESS ====================
-const Progress = () => {
+const Progress = ({ user }) => {
+  // Data dummy progress, nanti bisa diganti dengan data dari backend
+  const completedCount = 2; // contoh
+  const totalModules = 6;
+  const percentage = Math.round((completedCount / totalModules) * 100);
+  const streak = 3;
+  const totalMinutes = 45;
+
+  const weekData = [
+    { day: 'Sen', minutes: 20 },
+    { day: 'Sel', minutes: 45 },
+    { day: 'Rab', minutes: 70 },
+    { day: 'Kam', minutes: 30 },
+    { day: 'Jum', minutes: 0 },
+    { day: 'Sab', minutes: 0 },
+    { day: 'Min', minutes: 0 },
+  ];
+
+  const topics = [
+    { name: 'Fundamental', progress: 100 },
+    { name: 'Kesehatan', progress: 30 },
+    { name: 'Terapi', progress: 0 },
+    { name: 'Dukungan', progress: 0 },
+  ];
+
   return (
     <div className="progress-modern">
       <h2 className="progress-title">📈 Progress Belajar</h2>
@@ -244,15 +155,15 @@ const Progress = () => {
           <div className="circular-progress-modern">
             <svg viewBox="0 0 36 36">
               <path className="circle-bg-modern" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              <path className="circle-fill-modern" strokeDasharray="33, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path className="circle-fill-modern" strokeDasharray={`${percentage}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
             </svg>
             <div className="circle-text">
-              <span className="big-number">33%</span>
+              <span className="big-number">{percentage}%</span>
               <span>Overall</span>
             </div>
           </div>
           <div className="progress-details">
-            <p><strong>2/6</strong> modul selesai</p>
+            <p><strong>{completedCount}/{totalModules}</strong> modul selesai</p>
             <p>Estimasi sisa: <strong>3 hari</strong></p>
           </div>
         </div>
@@ -261,14 +172,14 @@ const Progress = () => {
           <div className="stat-card-modern">
             <span className="stat-emoji">⏱️</span>
             <div>
-              <span className="stat-num">45</span>
+              <span className="stat-num">{totalMinutes}</span>
               <span className="stat-label">Menit</span>
             </div>
           </div>
           <div className="stat-card-modern">
             <span className="stat-emoji">🔥</span>
             <div>
-              <span className="stat-num">3</span>
+              <span className="stat-num">{streak}</span>
               <span className="stat-label">Streak</span>
             </div>
           </div>
@@ -292,14 +203,14 @@ const Progress = () => {
       <div className="activity-modern">
         <h3>Aktivitas Minggu Ini</h3>
         <div className="chart-modern">
-          {['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map((day, i) => {
-            const heights = [20, 45, 70, 30, 0, 0, 0]
+          {weekData.map((item, i) => {
+            const heightPercent = Math.min(100, (item.minutes / 70) * 100); // 70 sebagai maks contoh
             return (
-              <div key={day} className="chart-bar">
-                <div className="bar-fill" style={{ height: `${heights[i]}%` }}></div>
-                <span>{day}</span>
+              <div key={item.day} className="chart-bar">
+                <div className="bar-fill" style={{ height: `${heightPercent}%` }}></div>
+                <span>{item.day}</span>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -307,22 +218,14 @@ const Progress = () => {
       <div className="topic-breakdown-modern">
         <h3>Progress per Topik</h3>
         <div className="topic-list-modern">
-          <div className="topic-item-modern">
-            <div><span>Fundamental</span> <span>100%</span></div>
-            <div className="topic-bar-modern"><div style={{width:'100%'}}></div></div>
-          </div>
-          <div className="topic-item-modern">
-            <div><span>Kesehatan</span> <span>30%</span></div>
-            <div className="topic-bar-modern"><div style={{width:'30%'}}></div></div>
-          </div>
-          <div className="topic-item-modern">
-            <div><span>Terapi</span> <span>0%</span></div>
-            <div className="topic-bar-modern"><div style={{width:'0%'}}></div></div>
-          </div>
-          <div className="topic-item-modern">
-            <div><span>Dukungan</span> <span>0%</span></div>
-            <div className="topic-bar-modern"><div style={{width:'0%'}}></div></div>
-          </div>
+          {topics.map(topic => (
+            <div key={topic.name} className="topic-item-modern">
+              <div><span>{topic.name}</span> <span>{topic.progress}%</span></div>
+              <div className="topic-bar-modern">
+                <div style={{ width: `${topic.progress}%` }}></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -338,9 +241,9 @@ const Achievements = () => {
     { icon: "🔥", name: "On Fire", desc: "7 hari streak", unlocked: false, progress: 3, total: 7 },
     { icon: "🏆", name: "Master", desc: "Selesaikan semua modul", unlocked: false, progress: 2, total: 6 },
     { icon: "🧠", name: "Knowledge Keeper", desc: "Post-test >90%", unlocked: false, progress: 0, total: 1 },
-  ]
+  ];
 
-  const unlockedCount = achievements.filter(a => a.unlocked).length
+  const unlockedCount = achievements.filter(a => a.unlocked).length;
 
   return (
     <div className="achievements-modern">
@@ -362,7 +265,9 @@ const Achievements = () => {
                 <span className="unlocked-date">✅ {ach.date}</span>
               ) : (
                 <div className="achievement-progress-modern">
-                  <div className="progress-bar-ach"><div style={{ width: `${(ach.progress/ach.total)*100}%` }}></div></div>
+                  <div className="progress-bar-ach">
+                    <div style={{ width: `${(ach.progress/ach.total)*100}%` }}></div>
+                  </div>
                   <span>{ach.progress}/{ach.total}</span>
                 </div>
               )}
@@ -510,7 +415,7 @@ const Settings = ({ user, onLogout }) => {
   const [comment, setComment] = useState('')
 
   const handleSaveProfile = () => {
-    showToast('✅ Profil diperbarui')
+    showToast('✅ Profil diperbarui (simulasi)')
   }
 
   const handleSubmitFeedback = () => {
@@ -591,8 +496,10 @@ const Settings = ({ user, onLogout }) => {
 const Dashboard = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { showToast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
-  const [recommended, setRecommended] = useState([])
+  const [recommended, setRecommended] = useState([])        // untuk overview A
+  const [recommendations, setRecommendations] = useState([]) // untuk halaman rekomendasi
   const [allContents, setAllContents] = useState([])
   const [postTestScore, setPostTestScore] = useState(null)
   const [selectedContent, setSelectedContent] = useState(null)
@@ -603,15 +510,38 @@ const Dashboard = () => {
       navigate('/assessment')
       return
     }
-    setAllContents(contentsData)
-    if (user.group === 'A') {
-      setRecommended(contentsData.filter(c => c.recommended))
+
+    const fetchData = async () => {
+      try {
+        // Ambil semua materi
+        const contentsRes = await getContents()
+        setAllContents(contentsRes.data)
+
+        // Jika grup A, ambil rekomendasi
+        if (user.group === 'A') {
+          const recRes = await getRecommendations(user.id)
+          // recRes.data adalah array { materi, confidence, reason }
+          setRecommendations(recRes.data)
+          // Untuk overview, ambil 3 teratas
+          setRecommended(recRes.data.slice(0,3).map(item => ({
+            ...item.materi,
+            confidence: item.confidence,
+            recommended: true
+          })))
+        }
+      } catch (error) {
+        showToast('Gagal memuat data')
+        console.error(error)
+      }
     }
+
+    fetchData()
+
     const savedScore = localStorage.getItem('postTestScore')
     if (savedScore) {
       setPostTestScore(JSON.parse(savedScore))
     }
-  }, [user, navigate])
+  }, [user, navigate, showToast])
 
   const handleLogout = () => {
     if (window.confirm('Apakah Anda yakin ingin logout?')) {
@@ -623,6 +553,7 @@ const Dashboard = () => {
   const handlePostTestComplete = (score, answers) => {
     setPostTestScore(score)
     localStorage.setItem('postTestScore', JSON.stringify(score))
+    // TODO: kirim ke backend via submitPosttest jika diperlukan
   }
 
   const handleCardClick = (content) => {
@@ -632,23 +563,38 @@ const Dashboard = () => {
 
   if (!user) return null
 
+  const isGroupA = user.group === 'A'
+
   return (
     <div className="dashboard-layout">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
       <div className="main-content" id="dashboard-content">
         {activeTab === 'overview' && (
-          user.group === 'A' 
-            ? <DashboardA recommended={recommended} other={allContents.filter(c => !recommended.some(r => r.id === c.id))} onCardClick={handleCardClick} />
-            : <DashboardB contents={allContents} onCardClick={handleCardClick} />
+          isGroupA 
+            ? <DashboardAOverview 
+                recommended={recommended} 
+                other={allContents.filter(c => !recommended.some(r => r.id === c.id))} 
+                onCardClick={handleCardClick} 
+              />
+            : <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
         )}
-        {activeTab === 'learning' && <LearningPath user={user} />}
-        {activeTab === 'progress' && <Progress />}
+        {isGroupA && activeTab === 'recommendations' && (
+          <RecommendationsPage recommendations={recommendations} onCardClick={handleCardClick} />
+        )}
+        {!isGroupA && activeTab === 'all' && (
+          <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
+        )}
+        {activeTab === 'progress' && <Progress user={user} />}
         {activeTab === 'achievements' && <Achievements />}
         {activeTab === 'posttest' && <PostTest onComplete={handlePostTestComplete} />}
         {activeTab === 'settings' && <Settings user={user} onLogout={handleLogout} />}
       </div>
       {showModal && (
-        <ContentDetailModal content={selectedContent} onClose={() => setShowModal(false)} />
+        <ContentDetailModal 
+          content={selectedContent} 
+          onClose={() => setShowModal(false)} 
+          user={user} 
+        />
       )}
     </div>
   )

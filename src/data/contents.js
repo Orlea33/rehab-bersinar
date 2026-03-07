@@ -26,7 +26,7 @@ const contents = [
                         Semua menyediakan sarana dan prasarana rehabilitasi dengan kualitas tinggi dan gratis.`,
     videoUrl: "https://www.youtube.com/embed/qcCe8nfXP3A", // nanti ganti dengan URL asli
     imageUrl:"/images/pengenalan.rehabilitasi.png",
-    category: "pengetahuan",
+    category: "program",
     recommended: true,
     confidence: 95
   },
@@ -64,7 +64,7 @@ const contents = [
         link: "https://bnn.go.id/pengertian-narkoba-dan-bahaya-narkoba-bagi-kesehatan" 
       }
     ],
-    category: "Kesehatan",
+    category: "pengetahuan",
     imageUrl: "/images/artikel.png",
     recommended: true,
     confidence: 88
@@ -86,7 +86,7 @@ const contents = [
 
     Pesan utama dari materi ini adalah "Tidak Ada Kata Terlambat", karena selalu ada kesempatan bagi setiap individu untuk selamat dan pulih dari jerat narkoba.`,
     imageUrl: "/images/adiksi.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "Pengetahuan",
+    category: "pengetahuan",
     recommended: false,
     confidence: 0
   },
@@ -108,7 +108,7 @@ const contents = [
     `,
     videoUrl: "https://www.youtube.com/embed/VyTUwGahWAw", // nanti ganti dengan URL asli
     imageUrl: "/images/program.png",
-    category:"program rehabilitasi",
+    category:"program",
     recommended: false,
     confidence: 0
   },
@@ -181,7 +181,7 @@ const contents = [
 
     Namun relapse dapat dicegah. Strategi pencegahan dapat dilakukan dengan mengelola stres melalui aktivitas positif seperti olahraga, hobi, atau kegiatan spiritual. Selain itu, penting untuk membangun sistem dukungan dengan menjauhi lingkungan yang berisiko serta aktif mengikuti kelompok pendukung atau sesi terapi.`,
     imageUrl: "/images/relaps.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "Pengetahuan",
+    category: "pencegahan",
     recommended: false,
     confidence: 0
   },
@@ -203,7 +203,7 @@ const contents = [
     Namun relapse dapat dicegah. Strategi pencegahan dapat dilakukan dengan mengelola stres melalui aktivitas positif seperti olahraga, hobi, atau kegiatan spiritual. Selain itu, penting untuk membangun sistem dukungan dengan menjauhi lingkungan yang berisiko serta aktif mengikuti kelompok pendukung atau sesi terapi.`,
     videoUrl:"https://www.youtube.com/embed/RMngbWaNu-0",
     imageUrl: "/images/ibm.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "layanan",
+    category: "program",
     recommended: false,
     confidence: 0
   },
@@ -224,7 +224,7 @@ const contents = [
 
     Membangun alat koping yang sehat adalah langkah kunci dalam mencegah penyalahgunaan zat sebagai pelarian stres.`,
     imageUrl: "/images/coping.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "Kesehatan mental",
+    category: "Kesehatan",
     recommended: false,
     confidence: 0
   },
@@ -241,7 +241,7 @@ const contents = [
     Sebaliknya, kebiasaan seperti mengonsumsi makanan olahan, gula berlebih, merokok, dan kurang aktivitas fisik dapat meningkatkan risiko penyakit kronis seperti obesitas, diabetes, penyakit jantung, stroke, dan hipertensi. 
     Oleh karena itu, menjaga pola hidup sehat sejak dini merupakan langkah penting untuk meningkatkan kualitas hidup dan menjaga kesehatan jangka panjang..`,
     imageUrl: "/images/polahidupsehat.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "Kesehatan mental",
+    category: "pola hidup sehat",
     recommended: false,
     confidence: 0
   },
@@ -267,7 +267,7 @@ const contents = [
       Melalui alur rehabilitasi ini diharapkan para penyalahguna narkoba dapat memperoleh kesempatan untuk pulih dan kembali menjalani kehidupan yang sehat, produktif, dan bebas dari narkoba.
         `,
     imageUrl: "/images/layananbnn.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
-    category: "Kesehatan",
+    category: "program",
     recommended: false,
     confidence: 0
   },
@@ -294,7 +294,7 @@ CBT juga berperan penting dalam pencegahan kekambuhan (relapse prevention). Deng
         link: "https://bnn.go.id/bnn-ri-lakukan-asistensi-cognitive-behavioural-therapy-sesuai/" 
       }
     ],
-    category: "Kesehatan",
+    category: "kesehatan",
     imageUrl: "/images/kognitif.jpg",
     recommended: false,
     confidence: 0

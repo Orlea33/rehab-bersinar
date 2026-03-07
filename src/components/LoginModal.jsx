@@ -1,16 +1,26 @@
 import { useState } from 'react'
-import './LoginModal.css' // optional, styling
+import { login as apiLogin } from '../services/api' // impor fungsi login
+import './LoginModal.css'
 
-const LoginModal = ({ isOpen, onClose, onLogin }) => {
+const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [nama, setNama] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Di sini nantinya bisa ditambahkan validasi ke API
-    // Untuk sementara, kita langsung panggil onLogin dengan data
-    onLogin({ nama, password })
-    onClose()
+    setLoading(true)
+    setError('')
+    try {
+      const response = await apiLogin({ nama, password })
+      onLoginSuccess(response.data) // kirim data user ke Navbar
+      onClose()
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Login gagal')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (!isOpen) return null
@@ -27,6 +37,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -36,10 +47,16 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="btn-login">Login</button>
-          <button type="button" className="btn-cancel" onClick={onClose}>Batal</button>
+          {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? 'Loading...' : 'Login'}
+          </button>
+          <button type="button" className="btn-cancel" onClick={onClose} disabled={loading}>
+            Batal
+          </button>
         </form>
       </div>
     </div>

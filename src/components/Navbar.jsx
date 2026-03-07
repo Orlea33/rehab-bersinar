@@ -1,13 +1,14 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom' // <-- tambahkan useNavigate
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import LoginModal from '../components/LoginModal'
+import { login as apiLogin } from '../services/api' // import fungsi login dari API
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate() // <-- inisialisasi navigate
+  const navigate = useNavigate()
   const { user, login } = useAuth()
 
   const isActive = (path) => location.pathname === path
@@ -25,15 +26,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleLogin = (userData) => {
-    // Simulasi login, nanti diganti dengan panggilan API
-    const dummyUser = {
-      id: Date.now().toString(),
-      nama: userData.nama,
-      group: Math.random() < 0.5 ? 'A' : 'B' // contoh random
-    }
-    login(dummyUser)
-    navigate('/dashboard') // <-- arahkan ke dashboard setelah login
+  const handleLoginSuccess = (userData) => {
+    // userData berisi { id, nama, group } dari backend
+    login(userData)
+    navigate('/dashboard')
   }
 
   return (
@@ -69,7 +65,7 @@ const Navbar = () => {
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
-        onLogin={handleLogin}
+        onLoginSuccess={handleLoginSuccess}
       />
     </>
   )

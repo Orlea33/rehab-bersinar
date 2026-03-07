@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import PreTest from '../components/PreTest'// import komponen PreTest
-// import api from '../services/api' nanti
+import { register } from '../services/api' // import API
 
 const Assessment = () => {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
-    // step 1
     nama: '',
     password: '',
     usia: '',
@@ -15,12 +14,11 @@ const Assessment = () => {
     pendidikan: '',
     kecamatan: '',
     informedConsent: false,
-    // step 3
     format: '',
     waktu: '',
     topik: ''
   })
-  const [pretestAnswers, setPretestAnswers] = useState({}) // obj jawaban
+  const [pretestAnswers, setPretestAnswers] = useState({})
   const [pretestScore, setPretestScore] = useState(0)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -68,7 +66,7 @@ const Assessment = () => {
   const handlePretestComplete = (answers, score) => {
     setPretestAnswers(answers)
     setPretestScore(score)
-    setStep(3) // lanjut ke preferensi
+    setStep(3)
   }
 
   const handleSubmit = async () => {
@@ -76,38 +74,35 @@ const Assessment = () => {
 
     setLoading(true)
     try {
-      // Gabungkan data untuk dikirim ke backend
       const payload = {
-        ...formData,
-        pretestAnswers, // objek jawaban
-        pretestScore
+        nama: formData.nama,
+        password: formData.password,
+        usia: parseInt(formData.usia),
+        gender: formData.gender,
+        pendidikan: formData.pendidikan,
+        kecamatan: formData.kecamatan,
+        informed_consent: formData.informedConsent,
+        pretest_answers: pretestAnswers,
+        pretest_score: pretestScore,
+        preferensi_format: formData.format,
+        preferensi_waktu: parseInt(formData.waktu),
+        preferensi_topik: formData.topik
       }
 
-      // TODO: ganti dengan API call
-      // const res = await api.post('/register', payload)
-      // login(res.data.user)
+      const response = await register(payload)
+      const user = response.data
+      login(user)
 
-      // Simulasi sukses, grup random
-      setTimeout(() => {
-        const dummyUser = {
-          id: 1,
-          nama: formData.nama,
-          group: Math.random() < 0.5 ? 'A' : 'B'
-        }
-        login(dummyUser)
-        setLoading(false)
-        // Jika grup A, tampilkan step 4 (RF processing)
-        if (dummyUser.group === 'A') {
-          setStep(4)
-          setTimeout(() => {
-            navigate('/dashboard')
-          }, 4000)
-        } else {
-          navigate('/dashboard')
-        }
-      }, 1000)
+      if (user.group === 'A') {
+        setStep(4)
+        setTimeout(() => navigate('/dashboard'), 4000)
+      } else {
+        navigate('/dashboard')
+      }
     } catch (error) {
-      alert('Gagal registrasi')
+      console.error(error)
+      alert('Registrasi gagal: ' + (error.response?.data?.detail || error.message))
+    } finally {
       setLoading(false)
     }
   }
@@ -244,12 +239,12 @@ const Assessment = () => {
             <label>Topik yang paling ingin Anda pelajari:</label>
             <select id="topik" value={formData.topik} onChange={handleChange}>
               <option value="">Pilih...</option>
-              <option value="pengenalan">Pengenalan Rehabilitasi</option>
-              <option value="dampak">Dampak Narkoba bagi kesehatan</option>
-              <option value="terapi">Metode Terapi</option>
+              <option value="program">Pengenalan Rehabilitasi</option>
+              <option value="pengetahuan">Dampak Narkoba bagi kesehatan</option>
+              <option value="kesehatan">Metode Terapi</option>
               <option value="keluarga">Peran Keluarga</option>
               <option value="pencegahan">Pencegahan Relaps</option>
-              <option value="pencegahan">Pola hidup sehat</option>
+              <option value="pola hidup sehat ">Pola hidup sehat</option>
             </select>
           </div>
 

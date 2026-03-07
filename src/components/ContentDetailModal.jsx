@@ -1,12 +1,11 @@
-import { useState } from 'react';
+// ContentDetailModal.jsx
+import { useState, useEffect } from 'react';
+import { trackOpen, trackClose, trackComplete } from '../services/api';
 
 const ReadMoreText = ({ text, previewLength = 200 }) => {
   const [showFull, setShowFull] = useState(false);
-
   const toggleText = () => setShowFull(!showFull);
-
   const displayText = showFull ? text : `${text.slice(0, previewLength)}...`;
-
   return (
     <div style={{ marginTop: '1rem', whiteSpace: 'pre-line' }}>
       {displayText}
@@ -31,9 +30,34 @@ const ReadMoreText = ({ text, previewLength = 200 }) => {
   );
 };
 
-const ContentDetailModal = ({ content, onClose }) => {
+const ContentDetailModal = ({ content, onClose, user }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState('');
+  const [completed, setCompleted] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+
+  useEffect(() => {
+    if (!content || !user) return;
+    // Catat open
+    trackOpen({ user_id: user.id, materi_id: content.id }).catch(console.error);
+    setStartTime(Date.now());
+  }, [content, user]);
+
+  const handleClose = () => {
+    if (startTime && user) {
+      const duration = Math.round((Date.now() - startTime) / 1000);
+      trackClose({ user_id: user.id, materi_id: content.id, duration }).catch(console.error);
+    }
+    onClose();
+  };
+
+  const handleMarkComplete = () => {
+    setCompleted(true);
+    if (user) {
+      trackComplete({ user_id: user.id, materi_id: content.id }).catch(console.error);
+    }
+    alert('Materi ditandai selesai!');
+  };
 
   if (!content) return null;
 
@@ -54,6 +78,11 @@ const ContentDetailModal = ({ content, onClose }) => {
             <div className="modal-description">
               <p style={{ whiteSpace: "pre-line" }}>{content.fullDescription}</p>
             </div>
+            {!completed && (
+              <button className="btn btn-white" onClick={handleMarkComplete} style={{ marginTop: '1rem' }}>
+                Tandai Selesai
+              </button>
+            )}
           </div>
         );
       case 'artikel':
@@ -71,6 +100,11 @@ const ContentDetailModal = ({ content, onClose }) => {
                 ))}
               </div>
             )}
+            {!completed && (
+              <button className="btn btn-white" onClick={handleMarkComplete} style={{ marginTop: '1rem' }}>
+                Tandai Selesai
+              </button>
+            )}
           </div>
         );
       case 'infografis':
@@ -86,9 +120,13 @@ const ContentDetailModal = ({ content, onClose }) => {
               }}
             />
             <div style={{ marginTop: '1rem' }}>
-                {/* Gunakan ReadMoreText untuk deskripsi agar bisa di-expand jika panjang */}
                 <ReadMoreText text={content.fullDescription || content.description} />
             </div>
+            {!completed && (
+              <button className="btn btn-white" onClick={handleMarkComplete} style={{ marginTop: '1rem' }}>
+                Tandai Selesai
+              </button>
+            )}
          </div>
         );
       default:
@@ -97,9 +135,9 @@ const ContentDetailModal = ({ content, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={handleClose}>
       <div className="modal-content-detail" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>×</button>
+        <button className="modal-close" onClick={handleClose}>×</button>
         <h2>{content.title}</h2>
         <div className="modal-meta">
           <span>{content.icon} {content.type}</span>

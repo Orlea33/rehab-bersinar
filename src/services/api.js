@@ -1,15 +1,13 @@
 // src/services/api.js
 import axios from 'axios';
 
-// Buat instance axios dengan base URL backend (ganti nanti)
+// Buat instance axios dengan base URL backend
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api', // Ganti dengan URL backend FastAPI
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'http://127.0.0.1:8000', // Pastikan backend berjalan di port ini
+  headers: { 'Content-Type': 'application/json' }
 });
 
-// Interceptor untuk menambahkan user ID jika ada (untuk autentikasi sederhana)
+// Interceptor untuk menambahkan user ID ke header jika tersedia
 api.interceptors.request.use(
   (config) => {
     const userId = sessionStorage.getItem('rehabUserId');
@@ -21,30 +19,41 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ========== MOCK UNTUK DEVELOPMENT (HAPUS SAAT BACKEND SUDAH SIAP) ==========
-// Simulasi registrasi dengan random assignment dan simpan di localStorage
-export const mockRegister = (userData) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Random assignment 50:50
-      const group = Math.random() < 0.5 ? 'A' : 'B';
-      const newUser = {
-        id: Date.now(),
-        nama: userData.nama,
-        group_type: group,
-      };
-      // Simpan ke "database" localStorage
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      users.push({ ...userData, id: newUser.id, group_type: group });
-      localStorage.setItem('users', JSON.stringify(users));
-      resolve({ data: { user: newUser } });
-    }, 500);
-  });
-};
+// ========== ENDPOINT FUNCTIONS ==========
 
-// ========== FUNGSI ASLI UNTUK BACKEND (COMMENT DULU) ==========
-// export const register = (userData) => api.post('/register', userData);
-// export const submitPretest = (data) => api.post('/pretest', data);
-// export const submitPreferences = (data) => api.post('/preferences', data);
-// export const getContents = () => api.get('/contents');
-// export const getRecommendations = (userId) => api.get(`/recommendations/${userId}`);
+// Registrasi pengguna baru (POST /register)
+export const register = (userData) => api.post('/register', userData);
+
+// Ambil semua materi (GET /contents)
+export const getContents = () => api.get('/contents');
+
+// Ambil detail materi berdasarkan ID (GET /contents/{id})
+export const getContentById = (id) => api.get(`/contents/${id}`);
+
+// Ambil rekomendasi untuk user tertentu (GET /recommendations/{userId})
+export const getRecommendations = (userId) => api.get(`/recommendations/${userId}`);
+
+// Tracking interaksi (POST /track)
+export const trackOpen = (data) => api.post('/track', { ...data, action: 'open' });
+export const trackClose = (data) => api.post('/track', { ...data, action: 'close' });
+export const trackComplete = (data) => api.post('/track', { ...data, action: 'complete' });
+
+// Submit post-test (POST /posttest)
+export const submitPosttest = (data) => api.post('/posttest', data);
+
+// Untuk inisialisasi materi (opsional, bisa dipanggil manual)
+export const initMateri = () => api.post('/init-materi');
+
+export const login = (data) => api.post('/login', data);
+
+export default {
+  register,
+  getContents,
+  getContentById,
+  getRecommendations,
+  trackOpen,
+  trackClose,
+  trackComplete,
+  submitPosttest,
+  initMateri
+};
