@@ -1,0 +1,125 @@
+import { useState } from 'react';
+
+const ReadMoreText = ({ text, previewLength = 200 }) => {
+  const [showFull, setShowFull] = useState(false);
+
+  const toggleText = () => setShowFull(!showFull);
+
+  const displayText = showFull ? text : `${text.slice(0, previewLength)}...`;
+
+  return (
+    <div style={{ marginTop: '1rem', whiteSpace: 'pre-line' }}>
+      {displayText}
+      {text.length > previewLength && (
+        <button
+          onClick={toggleText}
+          style={{
+            display: 'block',
+            marginTop: '0.5rem',
+            background: 'none',
+            border: 'none',
+            color: '#007bff',
+            cursor: 'pointer',
+            padding: 0,
+            fontSize: '0.95rem'
+          }}
+        >
+          {showFull ? "Tampilkan Lebih Sedikit" : "Teks Lengkap"}
+        </button>
+      )}
+    </div>
+  );
+};
+
+const ContentDetailModal = ({ content, onClose }) => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState('');
+
+  if (!content) return null;
+
+  const renderContent = () => {
+    switch(content.type) {
+      case 'video':
+        return (
+          <div className="modal-video">
+            <iframe
+              width="100%"
+              height="400"
+              src={content.videoUrl || 'https://www.youtube.com/embed/placeholder'}
+              title={content.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+            <div className="modal-description">
+              <p style={{ whiteSpace: "pre-line" }}>{content.fullDescription}</p>
+            </div>
+          </div>
+        );
+      case 'artikel':
+        return (
+          <div className="modal-artikel">
+            <p>{content.fullDescription || content.description}</p>
+            {content.content && <ReadMoreText text={content.content} />}
+            {content.sources && content.sources.length > 0 && (
+              <div className='sources' style={{ marginTop: '1.5rem' }}>
+                <h4>Sumber & Referensi:</h4>
+                {content.sources.map((source, index) => (
+                  <a key={index} href={source.link} target="_blank" rel="noopener noreferrer">
+                    {source.name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      case 'infografis':
+        return (
+          <div className="modal-infografis">
+            <img 
+              src={content.imageUrl || 'https://via.placeholder.com/600x400?text=Infografis'} 
+              alt={content.title}
+              style={{ width: '100%', borderRadius: '8px', cursor: 'pointer' }}
+              onClick={() => {
+                setLightboxImage(content.imageUrl || 'https://via.placeholder.com/600x400?text=Infografis');
+                setLightboxOpen(true);
+              }}
+            />
+            <div style={{ marginTop: '1rem' }}>
+                {/* Gunakan ReadMoreText untuk deskripsi agar bisa di-expand jika panjang */}
+                <ReadMoreText text={content.fullDescription || content.description} />
+            </div>
+         </div>
+        );
+      default:
+        return <p>{content.fullDescription || content.description}</p>;
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content-detail" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>×</button>
+        <h2>{content.title}</h2>
+        <div className="modal-meta">
+          <span>{content.icon} {content.type}</span>
+          <span>⏱️ {content.duration}</span>
+          {content.confidence > 0 && (
+            <span className="confidence">Match: {content.confidence}%</span>
+          )}
+        </div>
+        {renderContent()}
+      </div>
+      {lightboxOpen && (
+        <div className="lightbox-overlay" onClick={() => setLightboxOpen(false)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={lightboxImage} alt={content.title} />
+            <button className="lightbox-close" onClick={() => setLightboxOpen(false)}>×</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ContentDetailModal;

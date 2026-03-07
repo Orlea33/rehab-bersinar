@@ -2,7 +2,11 @@ const ContentCard = ({ content, showConfidence = false, onClick }) => {
   return (
     <div className="content-card" onClick={onClick}>
       <div className="card-image">
-        <span>{content.icon}</span>
+        {content.imageUrl ? (
+          <img src={content.imageUrl} alt={content.title} />
+        ) : (
+          <span>{content.icon}</span>
+        )}
         {content.recommended && showConfidence && (
           <div className="card-badge recommended">TOP PICK</div>
         )}

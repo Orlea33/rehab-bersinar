@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ContentCard from '../components/ContentCard'
 import contentsData from '../data/contents'
+import ContentDetailModal from '../components/ContentDetailModal';
 
 const Education = () => {
   const [contents, setContents] = useState([])
@@ -8,6 +9,8 @@ const Education = () => {
   const [search, setSearch] = useState('')
   const [filterType, setFilterType] = useState('Semua Format')
   const [filterTopic, setFilterTopic] = useState('Semua Topik')
+  const [selectedContent, setSelectedContent] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setContents(contentsData)
@@ -25,6 +28,11 @@ const Education = () => {
     // Topic filter bisa ditambahkan jika data punya properti topik, sementara diabaikan
     setFiltered(result)
   }, [search, filterType, filterTopic, contents])
+  const handleCardClick = (content) => {
+    setSelectedContent(content);
+    setShowModal(true);
+  };
+
 
   return (
     <>
@@ -74,10 +82,13 @@ const Education = () => {
           <ContentCard 
             key={content.id} 
             content={content} 
-            onClick={() => alert(`Membuka: ${content.title}`)} 
+            onClick={() => handleCardClick(content)} 
           />
         ))}
       </div>
+      {showModal && (
+        <ContentDetailModal content={selectedContent} onClose={() => setShowModal(false)} />
+      )}
     </>
   )
 }

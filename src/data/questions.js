@@ -122,7 +122,7 @@ const questions = [
     text: "Apa yang dimaksud dengan coping strategy dalam rehabilitasi narkotika?",
     options: [
       { value: "wrong1", label: "Coping strategy adalah mekanisme pertahanan diri yang terjadi secara tidak sadar untuk melindungi diri dari kecemasan" },
-      { value: "correct", label: "Coping strategy adalah cara cara mengelola stres (stressor), emosi negatif, godaan agar tidak kembali menggunakan narkotika" },
+      { value: "correct", label: "Coping strategy adalah cara mengelola stres (stressor), emosi negatif, godaan agar tidak kembali menggunakan narkotika" },
       { value: "wrong2", label: "Strategi bertahan hidup yang hanya berfokus pada mengalihkan pikiran saat muncul keinginan menggunakan" }
     ]
   },

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import ContentCard from './ContentCard'
 import contentsData from '../data/contents'
 
-const FeaturedContent = () => {
+const FeaturedContent = ({ onCardClick }) => {
   const [contents, setContents] = useState([])
 
   useEffect(() => {
@@ -17,12 +17,12 @@ const FeaturedContent = () => {
         <p>Pilih dari berbagai format pembelajaran yang sesuai dengan gaya belajar Anda</p>
       </div>
       <div className="content-grid" id="featured-content">
-        {contents.map(content => (
+        {contents.slice(0,3).map(content => (
           <ContentCard 
             key={content.id} 
             content={content} 
             showConfidence={content.recommended} 
-            onClick={() => alert(`Membuka: ${content.title}`)} 
+            onClick={() => onCardClick(content)}
           />
         ))}
       </div>
