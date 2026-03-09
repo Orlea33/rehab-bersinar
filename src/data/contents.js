@@ -3,7 +3,7 @@ const contents = [
     id: 1,
     title: "Pengenalan Rehabilitasi Narkoba",
     type: "video",
-    duration: "4 menit",
+    duration: "4",
     icon: "🎥",
     description: "Memahami konsep dasar rehabilitasi dan tahapan proses pemulihan.",
     fullDescription: `
@@ -34,7 +34,7 @@ const contents = [
     id: 2,
     title: "Pengertian Narkoba dan Bahaya Narkoba bagi Kesehatan",
     type: "artikel",
-    duration: "10 menit",
+    duration: "10",
     icon: "📄",
     description: "Artikel komprehensif tentang pengertian, jenis, dan dampak narkoba bagi kesehatan.",
     fullDescription: "Artikel ini membahas pengertian narkoba, jenis-jenis narkoba berdasarkan golongan, serta dampak negatifnya terhadap kesehatan fisik dan mental. Termasuk risiko ketergantungan, gangguan organ tubuh, halusinasi, penurunan kesadaran, dan kematian.",
@@ -73,7 +73,7 @@ const contents = [
     id: 3,
     title: "Apa itu Adiksi?",
     type: "infografis",
-    duration: "5 menit",
+    duration: "5",
     icon: "📊",
     description: "Visualisasi mekanisme ketergantungan (adiksi) pada otak.",
     fullDescription: `Infografis ini menjelaskan bahwa adiksi bukan sekadar kebiasaan buruk, melainkan kondisi kompleks yang melibatkan ketergantungan fisik dan psikologis terhadap zat adiktif. 
@@ -94,7 +94,7 @@ const contents = [
     id: 4,
     title: "Program Pasca Rehabilitasi Badan Narkotika Nasional Republik Indonesia",
     type: "video",
-    duration: "3 menit",
+    duration: "3",
     icon: "🎥",
     description: "Program lanjutan BNN RI melalui pendekatan Intervensi Berbasis Masyarakat (IBM).",
     fullDescription:`Video ini menjelaskan tentang layanan Pasca Rehabilitasi yang diselenggarakan oleh BNN RI sebagai bentuk rehabilitasi berkelanjutan. Program ini berfokus pada:
@@ -126,7 +126,7 @@ const contents = [
     id: 5,
     title: "Apa Itu Narkoba? Mengapa Narkoba Berbahaya? Bagaimana Agar Terhindar Narkoba?",
     type: "video",
-    duration: "10 menit",
+    duration: "10",
     icon: "🎥",
     description: "Edukasi komprehensif mengenai definisi narkoba, jenis-jenisnya berdasarkan golongan, dampak negatif bagi kesehatan.",
     fullDescription:`Video edukasi ini membahas secara mendalam tentang bahaya narkoba bagi remaja dan masyarakat umum, yang mencakup:
@@ -148,7 +148,7 @@ const contents = [
     id: 6,
     title: "Peran Keluarga dalam mencegah penyelahgunaan narkoba bagi anak",
     type: "infografis",
-    duration: " 3 menit",
+    duration: " 3",
     icon: "📄",
     description: "Panduan bagi keluarga dalam upaya mencegah penyalahgunaan narkoba pada pada anak.",
     fullDescription:`Keluarga adalah garis pertahanan terdepan dalam mencegah penyalahgunaan narkoba. Infografis ini merangkum 5 pilar utama peran orang tua:
@@ -168,7 +168,7 @@ const contents = [
     id: 7,
     title: "Pencegahan Relaps dan Maintenance",
     type: "infografis",
-    duration: "3 menit",
+    duration: "3",
     icon: "📊",
     description: "Strategi mencegah kambuh setelah rehabilitasi.",
     fullDescription:`Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
@@ -189,7 +189,7 @@ const contents = [
     id: 8,
     title: "Apa itu IBM (intervensi berbasis masyarakat)?",
     type: "video",
-    duration: "5 menit",
+    duration: "5",
     icon: "🎥",
     description: "memahami alur layanan IBM dan peran IBM dalam maryarakat",
     fullDescription:`Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
@@ -211,7 +211,7 @@ const contents = [
     id: 9,
     title: "Panduan mengelola stres atau coping strategy",
     type: "infografis",
-    duration: "3 menit",
+    duration: "3",
     icon: "📊",
     description: "Cara mengelola stess dapat di kontrol dalam diri kita sendiri dengan metode coping tools.",
     fullDescription:`Materi ini menjelaskan cara menghadapi stres dengan strategi yang tepat:
@@ -232,7 +232,7 @@ const contents = [
     id: 10,
     title: "Bagaimana menerapkan pola hidup sehat yang baik?",
     type: "infografis",
-    duration: "3 menit",
+    duration: "3",
     icon: "📊",
     description: "Panduan pola hidup sehat serta langkah-langkah nyata hidup sehat.",
     fullDescription:`Pola hidup sehat bukan hanya tentang makan makanan bergizi atau berolahraga, tetapi merupakan kebiasaan sehari-hari yang menjaga keseimbangan tubuh dan pikiran. 
@@ -249,7 +249,7 @@ const contents = [
     id: 11,
     title: "Alur rehabilitas rawat jalan dan rawat inap",
     type: "infografis",
-    duration: "3 menit",
+    duration: "3",
     icon: "📊",
     description: "menjelaskan alur layanan rehabilitasi BNN mulai dari proses skrining, asesmen, hingga pilihan perawatan rawat jalan atau rawat inap bagi penyalahguna narkoba.",
     fullDescription:`Proses rehabilitasi dimulai dari tahap pintu masuk yaitu skrining dan asesmen. Pada tahap ini dilakukan pemeriksaan awal untuk mengetahui kondisi klien, tingkat ketergantungan, serta faktor sosial yang mempengaruhi. Tahapan ini meliputi skrining, asesmen medis dan sosial, serta penyusunan rencana terapi yang sesuai dengan kebutuhan klien.
@@ -275,7 +275,7 @@ const contents = [
     id: 12,
     title: "Terapi Kognitif Perilaku (CBT) dalam Rehabilitasi Penyalahgunaan Narkoba",
     type: "artikel",
-    duration: "10 menit",
+    duration: "10",
     icon: "📄",
     description: "Memahami Cognitive Behavioral Therapy (CBT).",
     fullDescription: "Artikel ini membahas konsep Cognitive Behavioral Therapy (CBT) atau Terapi Kognitif Perilaku serta penerapannya dalam program rehabilitasi penyalahgunaan narkoba. CBT membantu individu mengenali hubungan antara pikiran, perasaan, dan perilaku sehingga mampu mengubah pola pikir negatif, mengatasi pemicu penggunaan narkoba, serta membangun strategi koping yang lebih sehat untuk mendukung proses pemulihan.",

@@ -244,7 +244,7 @@ const Assessment = () => {
               <option value="kesehatan">Metode Terapi</option>
               <option value="keluarga">Peran Keluarga</option>
               <option value="pencegahan">Pencegahan Relaps</option>
-              <option value="pola hidup sehat ">Pola hidup sehat</option>
+              <option value="pola hidup sehat">Pola hidup sehat</option>
             </select>
           </div>
 

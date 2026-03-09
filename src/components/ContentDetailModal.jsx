@@ -141,7 +141,7 @@ const ContentDetailModal = ({ content, onClose, user }) => {
         <h2>{content.title}</h2>
         <div className="modal-meta">
           <span>{content.icon} {content.type}</span>
-          <span>⏱️ {content.duration}</span>
+          <span>⏱️ {content.duration} menit</span>
           {content.confidence > 0 && (
             <span className="confidence">Match: {content.confidence}%</span>
           )}

@@ -259,6 +259,12 @@ body {
     margin-bottom: 3rem;
 }
 
+.stats-bar-loading {
+  text-align: center;
+  padding: 1rem;
+  color: var(--gray);
+}
+
 .stat-item {
     background: white;
     padding: 1.5rem;
@@ -1394,6 +1400,7 @@ footer {
     align-items: center;
     gap: 0.5rem;
     width: 40px;
+    height: 100%;
 }
 
 .bar-fill {

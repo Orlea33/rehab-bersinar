@@ -46,6 +46,25 @@ export const initMateri = () => api.post('/init-materi');
 
 export const login = (data) => api.post('/login', data);
 
+export const getUserProgress = (userId) => api.get(`/user/progress/${userId}`);
+export const getUserAchievements = (userId) => api.get(`/user/achievements/${userId}`);
+
+export const getUserWeeklyActivity = (userId) => {
+  return api.get(`/users/${userId}/weekly-activity`);
+};
+
+export const updateUserProfile = (userId, data) => {
+  return api.put(`/users/${userId}`, data);
+};
+
+export const submitFeedback = (data) => {
+  return api.post('/feedback', data);
+};
+
+export const getStats = () => {
+  return api.get('/stats');
+};
+
 export default {
   register,
   getContents,

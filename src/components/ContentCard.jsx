@@ -13,7 +13,7 @@ const ContentCard = ({ content, showConfidence = false, onClick }) => {
       </div>
       <div className="card-content">
         <div className="card-meta">
-          <span>⏱️ {content.duration}</span>
+          <span>⏱️ {content.duration} menit</span>
           <span>{content.type.toUpperCase()}</span>
         </div>
         <h3>{content.title}</h3>

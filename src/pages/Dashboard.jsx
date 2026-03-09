@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useToast } from '../context/ToastContext'
 import ContentCard from '../components/ContentCard'
 import ContentDetailModal from '../components/ContentDetailModal'
-import { getContents, getRecommendations } from '../services/api'
+import { getContents, getRecommendations, getUserProgress, getUserAchievements, submitPosttest, getUserWeeklyActivity, updateUserProfile, submitFeedback } from '../services/api'
 import questionsData from '../data/questions'
 
 // ==================== SIDEBAR ====================
@@ -122,29 +122,49 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
 
 // ==================== PROGRESS ====================
 const Progress = ({ user }) => {
-  // Data dummy progress, nanti bisa diganti dengan data dari backend
-  const completedCount = 2; // contoh
-  const totalModules = 6;
-  const percentage = Math.round((completedCount / totalModules) * 100);
-  const streak = 3;
-  const totalMinutes = 45;
+  const { showToast } = useToast();
+  const [progress, setProgress] = useState(null);
+  const [weekData, setWeekData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const weekData = [
-    { day: 'Sen', minutes: 20 },
-    { day: 'Sel', minutes: 45 },
-    { day: 'Rab', minutes: 70 },
-    { day: 'Kam', minutes: 30 },
-    { day: 'Jum', minutes: 0 },
-    { day: 'Sab', minutes: 0 },
-    { day: 'Min', minutes: 0 },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Ambil data progress
+        const progressRes = await getUserProgress(user.id);
+        setProgress(progressRes.data);
 
-  const topics = [
-    { name: 'Fundamental', progress: 100 },
-    { name: 'Kesehatan', progress: 30 },
-    { name: 'Terapi', progress: 0 },
-    { name: 'Dukungan', progress: 0 },
-  ];
+        // Ambil aktivitas mingguan
+        const activityRes = await getUserWeeklyActivity(user.id);
+        setWeekData(activityRes.data);
+      } catch (error) {
+        showToast('Gagal memuat data progress');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [user, showToast]);
+
+  if (loading) return <div>Memuat progress...</div>;
+  if (!progress) return <div>Gagal memuat data</div>;
+
+  const {
+    total_materi,
+    completed_count,
+    total_duration,
+    streak,
+    consistency,
+    pretest_score,
+    posttest_score
+  } = progress;
+
+  const percentage = total_materi > 0 ? Math.round((completed_count / total_materi) * 100) : 0;
+  const totalMinutes = Math.round(total_duration / 60); // konversi detik ke menit
+
+  // Gunakan data dari state, jika kosong tampilkan array kosong
+  const displayWeekData = weekData.length > 0 ? weekData : [];
 
   return (
     <div className="progress-modern">
@@ -163,8 +183,8 @@ const Progress = ({ user }) => {
             </div>
           </div>
           <div className="progress-details">
-            <p><strong>{completedCount}/{totalModules}</strong> modul selesai</p>
-            <p>Estimasi sisa: <strong>3 hari</strong></p>
+            <p><strong>{completed_count}/{total_materi}</strong> modul selesai</p>
+            <p>Pretest: <strong>{pretest_score}/15</strong> | Post-test: <strong>{posttest_score || '-'}/15</strong></p>
           </div>
         </div>
 
@@ -186,14 +206,14 @@ const Progress = ({ user }) => {
           <div className="stat-card-modern">
             <span className="stat-emoji">📊</span>
             <div>
-              <span className="stat-num">85%</span>
+              <span className="stat-num">{consistency}%</span>
               <span className="stat-label">Konsistensi</span>
             </div>
           </div>
           <div className="stat-card-modern">
             <span className="stat-emoji">🏆</span>
             <div>
-              <span className="stat-num">3</span>
+              <span className="stat-num">-</span>
               <span className="stat-label">Achievements</span>
             </div>
           </div>
@@ -203,8 +223,10 @@ const Progress = ({ user }) => {
       <div className="activity-modern">
         <h3>Aktivitas Minggu Ini</h3>
         <div className="chart-modern">
-          {weekData.map((item, i) => {
-            const heightPercent = Math.min(100, (item.minutes / 70) * 100); // 70 sebagai maks contoh
+          {displayWeekData.map((item) => {
+            // Cari nilai maksimum dari data (minimal 1 agar tidak error)
+            const maxMinutes = Math.max(...displayWeekData.map(d => d.minutes), 1);
+            const heightPercent = (item.minutes / maxMinutes) * 100;
             return (
               <div key={item.day} className="chart-bar">
                 <div className="bar-fill" style={{ height: `${heightPercent}%` }}></div>
@@ -214,34 +236,32 @@ const Progress = ({ user }) => {
           })}
         </div>
       </div>
-
-      <div className="topic-breakdown-modern">
-        <h3>Progress per Topik</h3>
-        <div className="topic-list-modern">
-          {topics.map(topic => (
-            <div key={topic.name} className="topic-item-modern">
-              <div><span>{topic.name}</span> <span>{topic.progress}%</span></div>
-              <div className="topic-bar-modern">
-                <div style={{ width: `${topic.progress}%` }}></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
-  )
-}
+  );
+};
 
 // ==================== ACHIEVEMENTS ====================
-const Achievements = () => {
-  const achievements = [
-    { icon: "🌟", name: "First Step", desc: "Selesaikan 1 modul", unlocked: true, date: "2 hari lalu" },
-    { icon: "📖", name: "Bookworm", desc: "Baca 3 artikel", unlocked: true, date: "Kemarin" },
-    { icon: "🎥", name: "Video Learner", desc: "Tonton 2 video", unlocked: true, date: "Hari ini" },
-    { icon: "🔥", name: "On Fire", desc: "7 hari streak", unlocked: false, progress: 3, total: 7 },
-    { icon: "🏆", name: "Master", desc: "Selesaikan semua modul", unlocked: false, progress: 2, total: 6 },
-    { icon: "🧠", name: "Knowledge Keeper", desc: "Post-test >90%", unlocked: false, progress: 0, total: 1 },
-  ];
+const Achievements = ({ user }) => {
+  const { showToast } = useToast();
+  const [achievements, setAchievements] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const res = await getUserAchievements(user.id);
+        setAchievements(res.data);
+      } catch (error) {
+        showToast('Gagal memuat achievements');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAchievements();
+  }, [user, showToast]);
+
+  if (loading) return <div>Memuat achievements...</div>;
 
   const unlockedCount = achievements.filter(a => a.unlocked).length;
 
@@ -262,11 +282,11 @@ const Achievements = () => {
               <h4>{ach.name}</h4>
               <p>{ach.desc}</p>
               {ach.unlocked ? (
-                <span className="unlocked-date">✅ {ach.date}</span>
+                <span className="unlocked-date">✅ Terbuka</span>
               ) : (
                 <div className="achievement-progress-modern">
                   <div className="progress-bar-ach">
-                    <div style={{ width: `${(ach.progress/ach.total)*100}%` }}></div>
+                    <div style={{ width: `${(ach.progress / ach.total) * 100}%` }}></div>
                   </div>
                   <span>{ach.progress}/{ach.total}</span>
                 </div>
@@ -277,11 +297,11 @@ const Achievements = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 // ==================== POST-TEST ====================
-const PostTest = ({ onComplete }) => {
+const PostTest = ({ onComplete, user }) => {
   const { showToast } = useToast()
   const [answers, setAnswers] = useState({})
   const [currentPage, setCurrentPage] = useState(0)
@@ -311,14 +331,25 @@ const PostTest = ({ onComplete }) => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let score = 0
     questionsData.forEach(q => {
       if (answers[q.id] === 'correct') score++
     })
-    onComplete(score, answers)
-    setSubmitted(true)
-    showToast(`✅ Post-test selesai! Skor: ${score}/${questionsData.length}`)
+    
+    try {
+      await submitPosttest({
+        user_id: user.id,
+        answers: answers,
+        score: score
+      });
+      onComplete(score, answers)
+      setSubmitted(true)
+      showToast(`✅ Post-test selesai! Skor: ${score}/${questionsData.length}`)
+    } catch (error) {
+      showToast('Gagal menyimpan post-test')
+      console.error(error)
+    }
   }
 
   if (submitted) {
@@ -410,19 +441,50 @@ const PostTest = ({ onComplete }) => {
 
 // ==================== SETTINGS ====================
 const Settings = ({ user, onLogout }) => {
-  const { showToast } = useToast()
-  const [rating, setRating] = useState(5)
-  const [comment, setComment] = useState('')
+  const { showToast } = useToast();
+  const [nama, setNama] = useState(user?.nama || '');
+  const [usia, setUsia] = useState(user?.usia || '');
+  const [gender, setGender] = useState(user?.gender || '');
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSaveProfile = () => {
-    showToast('✅ Profil diperbarui (simulasi)')
-  }
+  const handleSaveProfile = async () => {
+    if (!nama || !usia || !gender) {
+      showToast('Semua field profil harus diisi');
+      return;
+    }
+    setLoading(true);
+    try {
+      await updateUserProfile(user.id, { nama, usia: parseInt(usia), gender });
+      showToast('✅ Profil berhasil diperbarui');
+      // Opsional: perbarui context user jika diperlukan
+    } catch (error) {
+      showToast('Gagal memperbarui profil');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSubmitFeedback = () => {
-    showToast('Terima kasih atas feedback Anda!')
-    setComment('')
-    setRating(5)
-  }
+  const handleSubmitFeedback = async () => {
+    if (rating < 1 || rating > 5) {
+      showToast('Rating harus antara 1-5');
+      return;
+    }
+    setLoading(true);
+    try {
+      await submitFeedback({ user_id: user.id, rating, comment });
+      showToast('Terima kasih atas feedback Anda!');
+      setComment('');
+      setRating(5);
+    } catch (error) {
+      showToast('Gagal mengirim feedback');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="settings-modern">
@@ -433,28 +495,53 @@ const Settings = ({ user, onLogout }) => {
         <div className="settings-form">
           <div className="form-group-modern">
             <label>Nama Lengkap</label>
-            <input type="text" defaultValue={user?.nama || ''} placeholder="Nama Anda" />
+            <input 
+              type="text" 
+              value={nama} 
+              onChange={(e) => setNama(e.target.value)} 
+              placeholder="Nama Anda" 
+              disabled={loading}
+            />
           </div>
           <div className="form-row-modern">
             <div className="form-group-modern">
               <label>Usia</label>
-              <input type="number" defaultValue={user?.usia || ''} placeholder="25" />
+              <input 
+                type="number" 
+                value={usia} 
+                onChange={(e) => setUsia(e.target.value)} 
+                placeholder="25" 
+                disabled={loading}
+              />
             </div>
             <div className="form-group-modern">
               <label>Jenis Kelamin</label>
-              <select defaultValue={user?.gender || ''}>
+              <select 
+                value={gender} 
+                onChange={(e) => setGender(e.target.value)} 
+                disabled={loading}
+              >
+                <option value="">Pilih</option>
                 <option value="L">Laki-laki</option>
                 <option value="P">Perempuan</option>
               </select>
             </div>
           </div>
-          <button className="btn-save-modern" onClick={handleSaveProfile}>Simpan Profil</button>
+          <button 
+            className="btn-save-modern" 
+            onClick={handleSaveProfile}
+            disabled={loading}
+          >
+            {loading ? 'Menyimpan...' : 'Simpan Profil'}
+          </button>
         </div>
       </div>
 
       <div className="settings-section-modern">
         <h3>Feedback & Penilaian</h3>
-        <p style={{ color: 'var(--gray)', marginBottom: '1rem' }}>Bantu kami meningkatkan platform dengan memberikan penilaian dan komentar Anda.</p>
+        <p style={{ color: 'var(--gray)', marginBottom: '1rem' }}>
+          Bantu kami meningkatkan platform dengan memberikan penilaian dan komentar Anda.
+        </p>
         <div className="settings-form">
           <div className="form-group-modern">
             <label>Rating (1-5)</label>
@@ -462,8 +549,11 @@ const Settings = ({ user, onLogout }) => {
               {[1,2,3,4,5].map(star => (
                 <span
                   key={star}
-                  onClick={() => setRating(star)}
-                  style={{ cursor: 'pointer', color: star <= rating ? '#F59E0B' : '#e5e7eb' }}
+                  onClick={() => !loading && setRating(star)}
+                  style={{ 
+                    cursor: loading ? 'not-allowed' : 'pointer', 
+                    color: star <= rating ? '#F59E0B' : '#e5e7eb' 
+                  }}
                 >
                   ★
                 </span>
@@ -477,20 +567,39 @@ const Settings = ({ user, onLogout }) => {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Tulis komentar Anda di sini..."
-              style={{ width: '100%', padding: '0.8rem', border: '2px solid #e5e7eb', borderRadius: '18px', resize: 'vertical' }}
+              disabled={loading}
+              style={{ 
+                width: '100%', 
+                padding: '0.8rem', 
+                border: '2px solid #e5e7eb', 
+                borderRadius: '18px', 
+                resize: 'vertical' 
+              }}
             />
           </div>
-          <button className="btn-save-modern" onClick={handleSubmitFeedback}>Kirim Feedback</button>
+          <button 
+            className="btn-save-modern" 
+            onClick={handleSubmitFeedback}
+            disabled={loading}
+          >
+            {loading ? 'Mengirim...' : 'Kirim Feedback'}
+          </button>
         </div>
       </div>
 
       <div className="settings-section-modern danger">
         <h3>Logout</h3>
-        <button className="btn-danger-modern" onClick={onLogout}>🚪 Keluar dari Akun</button>
+        <button 
+          className="btn-danger-modern" 
+          onClick={onLogout}
+          disabled={loading}
+        >
+          🚪 Keluar dari Akun
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 // ==================== DASHBOARD UTAMA ====================
 const Dashboard = () => {
@@ -550,10 +659,16 @@ const Dashboard = () => {
     }
   }
 
-  const handlePostTestComplete = (score, answers) => {
+  const handlePostTestComplete = async (score, answers) => {
     setPostTestScore(score)
     localStorage.setItem('postTestScore', JSON.stringify(score))
-    // TODO: kirim ke backend via submitPosttest jika diperlukan
+    try {
+      await submitPosttest({ user_id: user.id, answers, score })
+      showToast('✅ Post-test berhasil disimpan!')
+    } catch (error) {
+      showToast('Gagal menyimpan post-test')
+      console.error(error)
+    }
   }
 
   const handleCardClick = (content) => {
@@ -585,8 +700,8 @@ const Dashboard = () => {
           <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
         )}
         {activeTab === 'progress' && <Progress user={user} />}
-        {activeTab === 'achievements' && <Achievements />}
-        {activeTab === 'posttest' && <PostTest onComplete={handlePostTestComplete} />}
+        {activeTab === 'achievements' && <Achievements user={user} />}
+        {activeTab === 'posttest' && <PostTest onComplete={handlePostTestComplete} user={user} />}
         {activeTab === 'settings' && <Settings user={user} onLogout={handleLogout} />}
       </div>
       {showModal && (
