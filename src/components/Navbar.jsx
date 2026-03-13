@@ -27,10 +27,13 @@ const Navbar = () => {
   }, [])
 
   const handleLoginSuccess = (userData) => {
-    // userData berisi { id, nama, group } dari backend
-    login(userData)
+  login(userData)
+  if (userData.is_admin) {
+    navigate('/admin')
+  } else {
     navigate('/dashboard')
   }
+}
 
   return (
     <>
@@ -47,6 +50,9 @@ const Navbar = () => {
             <li><Link to="/education" className={isActive('/education') ? 'active' : ''}>Edukasi</Link></li>
             <li><Link to="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>Dashboard</Link></li>
             <li><Link to="/about" className={isActive('/about') ? 'active' : ''}>Tentang</Link></li>
+            {user && user.is_admin && (
+              <li><Link to="/admin" className={isActive('/admin') ? 'active' : ''}>Admin</Link></li>
+            )}
             {!user ? (
               <li>
                 <button className="btn-nav" onClick={() => setIsLoginModalOpen(true)}>

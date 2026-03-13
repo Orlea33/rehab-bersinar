@@ -1,29 +1,30 @@
-import { useState } from 'react'
-import { login as apiLogin } from '../services/api' // impor fungsi login
-import './LoginModal.css'
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import './LoginModal.css';
 
-const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
-  const [nama, setNama] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+const LoginModal = ({ isOpen, onClose }) => {
+  const [nama, setNama] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
     try {
-      const response = await apiLogin({ nama, password })
-      onLoginSuccess(response.data) // kirim data user ke Navbar
-      onClose()
+      const user = await login(nama, password);
+      onClose();
+      if (onLoginSuccess) onLoginSuccess(user);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login gagal')
+      setError(err.response?.data?.detail || 'Login gagal');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>

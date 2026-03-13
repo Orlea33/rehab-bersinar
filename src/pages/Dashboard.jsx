@@ -4,7 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { useToast } from '../context/ToastContext'
 import ContentCard from '../components/ContentCard'
 import ContentDetailModal from '../components/ContentDetailModal'
-import { getContents, getRecommendations, getUserProgress, getUserAchievements, submitPosttest, getUserWeeklyActivity, updateUserProfile, submitFeedback } from '../services/api'
+import {
+  getContents,
+  getRecommendations,
+  getUserProgress,
+  getUserAchievements,
+  submitPosttest,
+  getUserWeeklyActivity,
+  updateUserProfile,
+  submitFeedback
+} from '../services/api'
 import questionsData from '../data/questions'
 
 // ==================== SIDEBAR ====================
@@ -21,7 +30,7 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
           {isGroupA ? 'Kelompok A - Rekomendasi Personal (Random Forest)' : 'Kelompok B - Akses Bebas (Kontrol)'}
         </div>
       </div>
-      
+
       <ul className="sidebar-menu">
         <li><a href="#" className={activeTab === 'overview' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('overview') }}>📊 Overview</a></li>
         {isGroupA ? (
@@ -45,9 +54,9 @@ const DashboardAOverview = ({ recommended, other, onCardClick }) => {
       <h2 style={{ marginBottom: '1.5rem' }}>Rekomendasi Personal Untukmu</h2>
       <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {recommended.map(content => (
-          <ContentCard 
-            key={content.id} 
-            content={content} 
+          <ContentCard
+            key={content.id}
+            content={content}
             showConfidence={true}
             onClick={() => onCardClick(content)}
           />
@@ -56,8 +65,8 @@ const DashboardAOverview = ({ recommended, other, onCardClick }) => {
       <h3 style={{ margin: '2rem 0 1rem' }}>Materi Lainnya</h3>
       <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {other.map(content => (
-          <ContentCard 
-            key={content.id} 
+          <ContentCard
+            key={content.id}
             content={content}
             onClick={() => onCardClick(content)}
           />
@@ -74,8 +83,8 @@ const DashboardBOverview = ({ contents, onCardClick }) => {
       <h2 style={{ marginBottom: '1.5rem' }}>Semua Materi Edukasi</h2>
       <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
         {contents.map(content => (
-          <ContentCard 
-            key={content.id} 
+          <ContentCard
+            key={content.id}
             content={content}
             onClick={() => onCardClick(content)}
           />
@@ -91,23 +100,23 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
     <div className="recommendations-page">
       <h2>🤖 Semua Rekomendasi (Random Forest)</h2>
       <p style={{ marginBottom: '1.5rem', color: 'var(--gray)' }}>
-        Berikut adalah semua materi yang direkomendasikan untuk Anda, diurutkan dari yang paling cocok. 
+        Berikut adalah semua materi yang direkomendasikan untuk Anda, diurutkan dari yang paling cocok.
         Setiap materi disertai dengan confidence score dan alasan rekomendasi berdasarkan profil Anda.
       </p>
       <div className="content-grid">
         {recommendations.map(item => (
           <div key={item.materi.id} className="recommendation-item">
-            <ContentCard 
-              content={item.materi} 
+            <ContentCard
+              content={item.materi}
               showConfidence={true}
               onClick={() => onCardClick(item.materi)}
             />
-            <div className="recommendation-reason" style={{ 
-              marginTop: '0.5rem', 
-              fontSize: '0.9rem', 
-              color: 'var(--gray)', 
-              background: '#f0f9ff', 
-              padding: '0.75rem', 
+            <div className="recommendation-reason" style={{
+              marginTop: '0.5rem',
+              fontSize: '0.9rem',
+              color: 'var(--gray)',
+              background: '#f0f9ff',
+              padding: '0.75rem',
               borderRadius: '8px',
               borderLeft: '4px solid var(--accent)'
             }}>
@@ -121,34 +130,35 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
 }
 
 // ==================== PROGRESS ====================
+// Komponen ini sekarang menggunakan user dari props, tapi API dipanggil tanpa parameter
 const Progress = ({ user }) => {
-  const { showToast } = useToast();
-  const [progress, setProgress] = useState(null);
-  const [weekData, setWeekData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast()
+  const [progress, setProgress] = useState(null)
+  const [weekData, setWeekData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Ambil data progress
-        const progressRes = await getUserProgress(user.id);
-        setProgress(progressRes.data);
-
-        // Ambil aktivitas mingguan
-        const activityRes = await getUserWeeklyActivity(user.id);
-        setWeekData(activityRes.data);
+        // getUserProgress dan getUserWeeklyActivity tidak perlu parameter
+        const [progressRes, activityRes] = await Promise.all([
+          getUserProgress(),
+          getUserWeeklyActivity()
+        ])
+        setProgress(progressRes.data)
+        setWeekData(activityRes.data)
       } catch (error) {
-        showToast('Gagal memuat data progress');
-        console.error(error);
+        showToast('Gagal memuat data progress')
+        console.error(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchData();
-  }, [user, showToast]);
+    }
+    fetchData()
+  }, [showToast]) // tidak perlu dependensi user karena API tidak pakai parameter
 
-  if (loading) return <div>Memuat progress...</div>;
-  if (!progress) return <div>Gagal memuat data</div>;
+  if (loading) return <div>Memuat progress...</div>
+  if (!progress) return <div>Gagal memuat data</div>
 
   const {
     total_materi,
@@ -158,18 +168,17 @@ const Progress = ({ user }) => {
     consistency,
     pretest_score,
     posttest_score
-  } = progress;
+  } = progress
 
-  const percentage = total_materi > 0 ? Math.round((completed_count / total_materi) * 100) : 0;
-  const totalMinutes = Math.round(total_duration / 60); // konversi detik ke menit
+  const percentage = total_materi > 0 ? Math.round((completed_count / total_materi) * 100) : 0
+  const totalMinutes = Math.round(total_duration / 60)
 
-  // Gunakan data dari state, jika kosong tampilkan array kosong
-  const displayWeekData = weekData.length > 0 ? weekData : [];
+  const displayWeekData = weekData.length > 0 ? weekData : []
 
   return (
     <div className="progress-modern">
       <h2 className="progress-title">📈 Progress Belajar</h2>
-      
+
       <div className="progress-grid">
         <div className="progress-card highlight">
           <div className="circular-progress-modern">
@@ -224,46 +233,46 @@ const Progress = ({ user }) => {
         <h3>Aktivitas Minggu Ini</h3>
         <div className="chart-modern">
           {displayWeekData.map((item) => {
-            // Cari nilai maksimum dari data (minimal 1 agar tidak error)
-            const maxMinutes = Math.max(...displayWeekData.map(d => d.minutes), 1);
-            const heightPercent = (item.minutes / maxMinutes) * 100;
+            const maxMinutes = Math.max(...displayWeekData.map(d => d.minutes), 1)
+            const heightPercent = (item.minutes / maxMinutes) * 100
             return (
               <div key={item.day} className="chart-bar">
                 <div className="bar-fill" style={{ height: `${heightPercent}%` }}></div>
                 <span>{item.day}</span>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== ACHIEVEMENTS ====================
+// Komponen ini menggunakan user dari props, API tanpa parameter
 const Achievements = ({ user }) => {
-  const { showToast } = useToast();
-  const [achievements, setAchievements] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast()
+  const [achievements, setAchievements] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
-        const res = await getUserAchievements(user.id);
-        setAchievements(res.data);
+        const res = await getUserAchievements() // tanpa parameter
+        setAchievements(res.data)
       } catch (error) {
-        showToast('Gagal memuat achievements');
-        console.error(error);
+        showToast('Gagal memuat achievements')
+        console.error(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchAchievements();
-  }, [user, showToast]);
+    }
+    fetchAchievements()
+  }, [showToast])
 
-  if (loading) return <div>Memuat achievements...</div>;
+  if (loading) return <div>Memuat achievements...</div>
 
-  const unlockedCount = achievements.filter(a => a.unlocked).length;
+  const unlockedCount = achievements.filter(a => a.unlocked).length
 
   return (
     <div className="achievements-modern">
@@ -297,15 +306,35 @@ const Achievements = ({ user }) => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
+// ==================== POST-TEST ====================
+// Menerima prop user, tapi submitPosttest tanpa user_id
 // ==================== POST-TEST ====================
 const PostTest = ({ onComplete, user }) => {
   const { showToast } = useToast()
   const [answers, setAnswers] = useState({})
   const [currentPage, setCurrentPage] = useState(0)
   const [submitted, setSubmitted] = useState(false)
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const checkPosttest = async () => {
+      try {
+        const res = await getUserProgress()
+        if (res.data.posttest_score !== null) {
+          setAlreadySubmitted(true)
+        }
+      } catch (error) {
+        console.error('Gagal mengecek post-test', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    checkPosttest()
+  }, [])
 
   const questionsPerPage = 5
   const totalPages = Math.ceil(questionsData.length / questionsPerPage)
@@ -336,13 +365,9 @@ const PostTest = ({ onComplete, user }) => {
     questionsData.forEach(q => {
       if (answers[q.id] === 'correct') score++
     })
-    
+
     try {
-      await submitPosttest({
-        user_id: user.id,
-        answers: answers,
-        score: score
-      });
+      await submitPosttest({ answers, score })
       onComplete(score, answers)
       setSubmitted(true)
       showToast(`✅ Post-test selesai! Skor: ${score}/${questionsData.length}`)
@@ -352,13 +377,24 @@ const PostTest = ({ onComplete, user }) => {
     }
   }
 
+  if (loading) return <div>Memuat status post-test...</div>
+
+  if (alreadySubmitted) {
+    return (
+      <div style={{ textAlign: 'center', padding: '3rem' }}>
+        <h2>📝 Post-Test Sudah Dikerjakan</h2>
+        <p>Anda telah menyelesaikan post-test. Terima kasih.</p>
+        <p>Skor Anda dapat dilihat di halaman Progress.</p>
+      </div>
+    )
+  }
+
   if (submitted) {
     return (
       <div style={{ textAlign: 'center', padding: '3rem' }}>
         <h2>📝 Post-Test Selesai</h2>
         <p>Terima kasih telah mengerjakan post-test.</p>
         <p>Skor Anda: {Object.values(answers).filter(v => v === 'correct').length}/{questionsData.length}</p>
-        <button className="btn btn-white" onClick={() => setSubmitted(false)}>Lihat Kembali Jawaban</button>
       </div>
     )
   }
@@ -440,102 +476,57 @@ const PostTest = ({ onComplete, user }) => {
 }
 
 // ==================== SETTINGS ====================
+// Menerima prop user, tapi panggilan API tanpa userId
 const Settings = ({ user, onLogout }) => {
-  const { showToast } = useToast();
-  const [nama, setNama] = useState(user?.nama || '');
-  const [usia, setUsia] = useState(user?.usia || '');
-  const [gender, setGender] = useState(user?.gender || '');
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { showToast } = useToast()
+  const [nama, setNama] = useState(user?.nama || '')
+  const [usia, setUsia] = useState(user?.usia || '')
+  const [gender, setGender] = useState(user?.gender || '')
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSaveProfile = async () => {
     if (!nama || !usia || !gender) {
-      showToast('Semua field profil harus diisi');
-      return;
+      showToast('Semua field profil harus diisi')
+      return
     }
-    setLoading(true);
+    setLoading(true)
     try {
-      await updateUserProfile(user.id, { nama, usia: parseInt(usia), gender });
-      showToast('✅ Profil berhasil diperbarui');
-      // Opsional: perbarui context user jika diperlukan
+      // updateUserProfile tanpa userId
+      await updateUserProfile({ nama, usia: parseInt(usia), gender })
+      showToast('✅ Profil berhasil diperbarui')
     } catch (error) {
-      showToast('Gagal memperbarui profil');
-      console.error(error);
+      showToast('Gagal memperbarui profil')
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSubmitFeedback = async () => {
     if (rating < 1 || rating > 5) {
-      showToast('Rating harus antara 1-5');
-      return;
+      showToast('Rating harus antara 1-5')
+      return
     }
-    setLoading(true);
+    setLoading(true)
     try {
-      await submitFeedback({ user_id: user.id, rating, comment });
-      showToast('Terima kasih atas feedback Anda!');
-      setComment('');
-      setRating(5);
+      // submitFeedback tanpa user_id
+      await submitFeedback({ rating, comment })
+      showToast('Terima kasih atas feedback Anda!')
+      setComment('')
+      setRating(5)
     } catch (error) {
-      showToast('Gagal mengirim feedback');
-      console.error(error);
+      showToast('Gagal mengirim feedback')
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="settings-modern">
       <h2>⚙️ Pengaturan Akun</h2>
-
-      <div className="settings-section-modern">
-        <h3>Profil</h3>
-        <div className="settings-form">
-          <div className="form-group-modern">
-            <label>Nama Lengkap</label>
-            <input 
-              type="text" 
-              value={nama} 
-              onChange={(e) => setNama(e.target.value)} 
-              placeholder="Nama Anda" 
-              disabled={loading}
-            />
-          </div>
-          <div className="form-row-modern">
-            <div className="form-group-modern">
-              <label>Usia</label>
-              <input 
-                type="number" 
-                value={usia} 
-                onChange={(e) => setUsia(e.target.value)} 
-                placeholder="25" 
-                disabled={loading}
-              />
-            </div>
-            <div className="form-group-modern">
-              <label>Jenis Kelamin</label>
-              <select 
-                value={gender} 
-                onChange={(e) => setGender(e.target.value)} 
-                disabled={loading}
-              >
-                <option value="">Pilih</option>
-                <option value="L">Laki-laki</option>
-                <option value="P">Perempuan</option>
-              </select>
-            </div>
-          </div>
-          <button 
-            className="btn-save-modern" 
-            onClick={handleSaveProfile}
-            disabled={loading}
-          >
-            {loading ? 'Menyimpan...' : 'Simpan Profil'}
-          </button>
-        </div>
-      </div>
 
       <div className="settings-section-modern">
         <h3>Feedback & Penilaian</h3>
@@ -550,9 +541,9 @@ const Settings = ({ user, onLogout }) => {
                 <span
                   key={star}
                   onClick={() => !loading && setRating(star)}
-                  style={{ 
-                    cursor: loading ? 'not-allowed' : 'pointer', 
-                    color: star <= rating ? '#F59E0B' : '#e5e7eb' 
+                  style={{
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    color: star <= rating ? '#F59E0B' : '#e5e7eb'
                   }}
                 >
                   ★
@@ -568,17 +559,17 @@ const Settings = ({ user, onLogout }) => {
               onChange={(e) => setComment(e.target.value)}
               placeholder="Tulis komentar Anda di sini..."
               disabled={loading}
-              style={{ 
-                width: '100%', 
-                padding: '0.8rem', 
-                border: '2px solid #e5e7eb', 
-                borderRadius: '18px', 
-                resize: 'vertical' 
+              style={{
+                width: '100%',
+                padding: '0.8rem',
+                border: '2px solid #e5e7eb',
+                borderRadius: '18px',
+                resize: 'vertical'
               }}
             />
           </div>
-          <button 
-            className="btn-save-modern" 
+          <button
+            className="btn-save-modern"
             onClick={handleSubmitFeedback}
             disabled={loading}
           >
@@ -589,8 +580,8 @@ const Settings = ({ user, onLogout }) => {
 
       <div className="settings-section-modern danger">
         <h3>Logout</h3>
-        <button 
-          className="btn-danger-modern" 
+        <button
+          className="btn-danger-modern"
           onClick={onLogout}
           disabled={loading}
         >
@@ -598,8 +589,8 @@ const Settings = ({ user, onLogout }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== DASHBOARD UTAMA ====================
 const Dashboard = () => {
@@ -607,10 +598,9 @@ const Dashboard = () => {
   const navigate = useNavigate()
   const { showToast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
-  const [recommended, setRecommended] = useState([])        // untuk overview A
-  const [recommendations, setRecommendations] = useState([]) // untuk halaman rekomendasi
+  const [recommended, setRecommended] = useState([])
+  const [recommendations, setRecommendations] = useState([])
   const [allContents, setAllContents] = useState([])
-  const [postTestScore, setPostTestScore] = useState(null)
   const [selectedContent, setSelectedContent] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -622,17 +612,14 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        // Ambil semua materi
         const contentsRes = await getContents()
         setAllContents(contentsRes.data)
 
-        // Jika grup A, ambil rekomendasi
         if (user.group === 'A') {
-          const recRes = await getRecommendations(user.id)
-          // recRes.data adalah array { materi, confidence, reason }
+          // getRecommendations tanpa parameter
+          const recRes = await getRecommendations()
           setRecommendations(recRes.data)
-          // Untuk overview, ambil 3 teratas
-          setRecommended(recRes.data.slice(0,3).map(item => ({
+          setRecommended(recRes.data.slice(0, 3).map(item => ({
             ...item.materi,
             confidence: item.confidence,
             recommended: true
@@ -645,11 +632,6 @@ const Dashboard = () => {
     }
 
     fetchData()
-
-    const savedScore = localStorage.getItem('postTestScore')
-    if (savedScore) {
-      setPostTestScore(JSON.parse(savedScore))
-    }
   }, [user, navigate, showToast])
 
   const handleLogout = () => {
@@ -660,10 +642,9 @@ const Dashboard = () => {
   }
 
   const handlePostTestComplete = async (score, answers) => {
-    setPostTestScore(score)
-    localStorage.setItem('postTestScore', JSON.stringify(score))
     try {
-      await submitPosttest({ user_id: user.id, answers, score })
+      // submitPosttest tanpa user_id
+      await submitPosttest({ answers, score })
       showToast('✅ Post-test berhasil disimpan!')
     } catch (error) {
       showToast('Gagal menyimpan post-test')
@@ -685,11 +666,11 @@ const Dashboard = () => {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
       <div className="main-content" id="dashboard-content">
         {activeTab === 'overview' && (
-          isGroupA 
-            ? <DashboardAOverview 
-                recommended={recommended} 
-                other={allContents.filter(c => !recommended.some(r => r.id === c.id))} 
-                onCardClick={handleCardClick} 
+          isGroupA
+            ? <DashboardAOverview
+                recommended={recommended}
+                other={allContents.filter(c => !recommended.some(r => r.id === c.id))}
+                onCardClick={handleCardClick}
               />
             : <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
         )}
@@ -705,10 +686,10 @@ const Dashboard = () => {
         {activeTab === 'settings' && <Settings user={user} onLogout={handleLogout} />}
       </div>
       {showModal && (
-        <ContentDetailModal 
-          content={selectedContent} 
-          onClose={() => setShowModal(false)} 
-          user={user} 
+        <ContentDetailModal
+          content={selectedContent}
+          onClose={() => setShowModal(false)}
+          user={user}
         />
       )}
     </div>

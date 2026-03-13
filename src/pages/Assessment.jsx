@@ -1,78 +1,65 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import PreTest from '../components/PreTest'// import komponen PreTest
-import { register } from '../services/api' // import API
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import PreTest from '../components/PreTest';
+import { register } from '../services/api';
 
 const Assessment = () => {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    nama: '',
-    password: '',
-    usia: '',
-    gender: '',
-    pendidikan: '',
-    kecamatan: '',
-    informedConsent: false,
-    format: '',
-    waktu: '',
-    topik: ''
-  })
-  const [pretestAnswers, setPretestAnswers] = useState({})
-  const [pretestScore, setPretestScore] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-  const { login } = useAuth()
+    nama: '', password: '', usia: '', gender: '', pendidikan: '', kecamatan: '',
+    informedConsent: false, format: '', waktu: '', topik: ''
+  });
+  const [pretestAnswers, setPretestAnswers] = useState({});
+  const [pretestScore, setPretestScore] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
-    const { id, value, type, checked } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [id]: type === 'checkbox' ? checked : value
-    }))
-  }
+    const { id, value, type, checked } = e.target;
+    setFormData(prev => ({ ...prev, [id]: type === 'checkbox' ? checked : value }));
+  };
 
   const validateStep1 = () => {
-    const { nama, password, usia, gender, pendidikan, kecamatan, informedConsent } = formData
+    const { nama, password, usia, gender, pendidikan, kecamatan, informedConsent } = formData;
     if (!nama || !password || !usia || !gender || !pendidikan || !kecamatan || !informedConsent) {
-      alert('Harap isi semua data dan setujui informed consent')
-      return false
+      alert('Harap isi semua data dan setujui informed consent');
+      return false;
     }
     if (password.length < 6) {
-      alert('Password minimal 6 karakter')
-      return false
+      alert('Password minimal 6 karakter');
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const validateStep3 = () => {
-    const { format, waktu, topik } = formData
+    const { format, waktu, topik } = formData;
     if (!format || !waktu || !topik) {
-      alert('Harap isi semua preferensi belajar')
-      return false
+      alert('Harap isi semua preferensi belajar');
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const handleNext = () => {
-    if (step === 1 && !validateStep1()) return
-    setStep(step + 1)
-  }
+    if (step === 1 && !validateStep1()) return;
+    setStep(step + 1);
+  };
 
-  const handlePrev = () => {
-    setStep(step - 1)
-  }
+  const handlePrev = () => setStep(step - 1);
 
   const handlePretestComplete = (answers, score) => {
-    setPretestAnswers(answers)
-    setPretestScore(score)
-    setStep(3)
-  }
+    setPretestAnswers(answers);
+    setPretestScore(score);
+    setStep(3);
+  };
 
   const handleSubmit = async () => {
-    if (!validateStep3()) return
+    if (!validateStep3()) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
       const payload = {
         nama: formData.nama,
@@ -87,25 +74,19 @@ const Assessment = () => {
         preferensi_format: formData.format,
         preferensi_waktu: parseInt(formData.waktu),
         preferensi_topik: formData.topik
-      }
+      };
 
-      const response = await register(payload)
-      const user = response.data
-      login(user)
+      await register(payload);         // registrasi
+      await login(formData.nama, formData.password); // auto login
 
-      if (user.group === 'A') {
-        setStep(4)
-        setTimeout(() => navigate('/dashboard'), 4000)
-      } else {
-        navigate('/dashboard')
-      }
+      navigate('/dashboard');
     } catch (error) {
-      console.error(error)
-      alert('Registrasi gagal: ' + (error.response?.data?.detail || error.message))
+      console.error(error);
+      alert('Registrasi gagal: ' + (error.response?.data?.detail || error.message));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="assessment-container">

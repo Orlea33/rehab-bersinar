@@ -21,8 +21,9 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Kontak</h4>
           <ul>
-            <li><a href="#">BNN Kota Manado</a></li>
-            <li><a href="#">Email: info@rehabbersinar.id</a></li>
+            <li><a href="https://www.facebook.com/p/BNN-Kota-Manado-100086996176670/">BNN Kota Manado</a></li>
+            <li><a href="#">Email: bnnkota.manado@gmail.com</a></li>
+            <li><a href="#">hubungi: +43 1 8800358</a></li>
           </ul>
         </div>
         <div className="footer-section">

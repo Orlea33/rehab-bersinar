@@ -1,0 +1,210 @@
+.admin-container {
+  display: flex;
+  gap: 2rem;
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  min-height: 70vh;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background: var(--dark);
+  color: white;
+  padding: 2rem 0;
+}
+
+.admin-sidebar h2 {
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  color: var(--primary-light);
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-sidebar li {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-sidebar li:hover,
+.admin-sidebar li.active {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--primary);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  background: white;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Tabel admin */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  background: var(--light-gray);
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-table tr:hover {
+  background: #f9fafb;
+}
+
+.admin-table button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin: 0 0.25rem;
+}
+
+/* Form admin */
+.admin-form {
+  background: var(--light-gray);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin: 1.5rem 0;
+}
+
+.admin-form h3 {
+  margin-bottom: 1rem;
+}
+
+.admin-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.admin-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.admin-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--dark);
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Statistik grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  background: var(--light-gray);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  display: block;
+}
+
+.stat-card .stat-label {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+/* Settings section */
+.settings-section {
+  background: var(--light-gray);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  max-width: 500px;
+}
+
+.settings-section h3 {
+  margin-bottom: 1rem;
+}
+
+.settings-section p {
+  margin-bottom: 0.5rem;
+}
+
+.btn-danger-modern {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-danger-modern:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+/* Tombol ekspor khusus */
+.export-btn {
+  background: transparent;
+  border: 2px solid #10B981;  /* warna hijau */
+  color: #10B981;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+
+.export-btn:hover {
+  background: #10B981;
+  color: white;
+}

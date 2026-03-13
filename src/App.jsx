@@ -7,6 +7,7 @@ import Education from './pages/Education'
 import Dashboard from './pages/Dashboard'
 import About from './pages/About'
 import './App.css' // optional
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/education" element={<Education />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
       <Footer />
