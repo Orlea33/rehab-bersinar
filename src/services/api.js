@@ -46,3 +46,4 @@ export const getAdminFeedbacks = () => api.get('/admin/feedbacks');
 export const createMateri = (data) => api.post('/admin/materi', data);
 export const updateMateri = (id, data) => api.put(`/admin/materi/${id}`, data);
 export const deleteMateri = (id) => api.delete(`/admin/materi/${id}`);
+export const getAllPosttests = () => api.get('/posttests');

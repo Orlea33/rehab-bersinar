@@ -1,27 +1,27 @@
-import { useState, useEffect } from 'react'
-import { getAdminUsers } from '../../services/api'
-import { useToast } from '../../context/ToastContext'
-import { exportToCSV } from '../../utils/exportToCSV'
+import { useState, useEffect } from 'react';
+import { getAdminUsers } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
+import { exportToCSV } from '../../utils/exportToCSV';
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const { showToast } = useToast()
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await getAdminUsers()
-        setUsers(res.data)
+        const res = await getAdminUsers();
+        setUsers(res.data);
       } catch (error) {
-        showToast('Gagal memuat data pengguna')
-        console.error(error)
+        showToast('Gagal memuat data pengguna');
+        console.error(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchUsers()
-  }, [showToast])
+    };
+    fetchUsers();
+  }, [showToast]);
 
   const handleExport = () => {
     const exportData = users.map(u => ({
@@ -32,14 +32,15 @@ const AdminUsers = () => {
       Pendidikan: u.pendidikan,
       Kecamatan: u.kecamatan,
       'Pretest Score': u.pretest_score,
+      'Posttest Score': u.posttest_score ?? '-', // jika null tampilkan '-'
       Group: u.group,
       Admin: u.is_admin ? 'Ya' : 'Tidak',
       'Tanggal Daftar': new Date(u.created_at).toLocaleDateString('id-ID')
-    }))
-    exportToCSV(exportData, 'pengguna.csv')
-  }
+    }));
+    exportToCSV(exportData, 'pengguna.csv');
+  };
 
-  if (loading) return <div>Memuat...</div>
+  if (loading) return <div>Memuat...</div>;
 
   return (
     <div>
@@ -63,6 +64,7 @@ const AdminUsers = () => {
               <th>Pendidikan</th>
               <th>Kecamatan</th>
               <th>Pretest</th>
+              <th>Posttest</th>
               <th>Group</th>
               <th>Admin</th>
               <th>Dibuat</th>
@@ -78,6 +80,7 @@ const AdminUsers = () => {
                 <td>{u.pendidikan}</td>
                 <td>{u.kecamatan}</td>
                 <td>{u.pretest_score}/15</td>
+                <td>{u.posttest_score !== null ? `${u.posttest_score}/15` : '-'}</td>
                 <td>{u.group}</td>
                 <td>{u.is_admin ? 'Ya' : 'Tidak'}</td>
                 <td>{new Date(u.created_at).toLocaleDateString('id-ID')}</td>
@@ -87,7 +90,7 @@ const AdminUsers = () => {
         </table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AdminUsers
+export default AdminUsers;
