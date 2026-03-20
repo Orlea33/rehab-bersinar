@@ -6,5 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     historyApiFallback: true, // penting untuk SPA
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 })

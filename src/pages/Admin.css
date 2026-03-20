@@ -1,57 +1,133 @@
+/* ==================== ADMIN LAYOUT – MODERN DASHBOARD ==================== */
 .admin-container {
   display: flex;
   gap: 2rem;
-  background: white;
+  background: linear-gradient(135deg, #0f172a 0%, #020617 60%, #064e3b 100%);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
   min-height: 70vh;
+  position: relative;
+}
+
+.admin-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.16), transparent 60%);
+  pointer-events: none;
 }
 
 .admin-sidebar {
-  width: 250px;
-  background: var(--dark);
+  width: 260px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(18px);
   color: white;
   padding: 2rem 0;
+  border-right: 1px solid rgba(148, 163, 184, 0.4);
+  position: relative;
+  z-index: 1;
 }
 
 .admin-sidebar h2 {
-  padding: 0 1.5rem;
-  margin-bottom: 2rem;
-  font-size: 1.2rem;
-  color: var(--primary-light);
+  padding: 0 1.75rem 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e5f9f2;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .admin-sidebar ul {
   list-style: none;
-  padding: 0;
+  padding: 0.5rem 0 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .admin-sidebar li {
-  padding: 1rem 1.5rem;
+  padding: 0.85rem 1.75rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s ease-out;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  position: relative;
+  border-radius: 999px;
+}
+
+.admin-sidebar li::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: radial-gradient(circle at top left, rgba(45, 212, 191, 0.9), rgba(96, 165, 250, 0.6)) border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.admin-sidebar li span {
+  font-size: 1.1rem;
 }
 
 .admin-sidebar li:hover,
 .admin-sidebar li.active {
-  background: rgba(255, 255, 255, 0.1);
-  border-left: 4px solid var(--primary);
+  background: radial-gradient(circle at top left, rgba(45, 212, 191, 0.14), rgba(15, 118, 110, 0.35));
+  color: #f9fafb;
+  transform: translateX(2px);
+}
+
+.admin-sidebar li.active::before {
+  opacity: 1;
 }
 
 .admin-content {
   flex: 1;
-  padding: 2rem;
-  background: white;
+  padding: 2.25rem 2.5rem;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.98));
   max-height: 80vh;
   overflow-y: auto;
+  position: relative;
+  z-index: 1;
+  color: #e5e7eb;
 }
 
-/* Tabel admin */
+.admin-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f9fafb;
+}
+
+.admin-content-subtitle {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin-bottom: 1.75rem;
+}
+
+/* ==================== ADMIN TABLE – MODERN ==================== */
+.admin-table-wrapper {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8);
+  overflow: hidden;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -59,40 +135,68 @@
   font-size: 0.9rem;
 }
 
+.admin-table thead {
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.98));
+}
+
 .admin-table th {
-  background: var(--light-gray);
-  padding: 0.75rem;
+  padding: 0.85rem 1rem;
   text-align: left;
   font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #cbd5f5;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+  white-space: nowrap;
 }
 
 .admin-table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(30, 64, 175, 0.35);
+  color: #e5e7eb;
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.admin-table tbody tr:nth-child(odd) {
+  background: rgba(15, 23, 42, 0.86);
 }
 
 .admin-table tr:hover {
-  background: #f9fafb;
+  background: radial-gradient(circle at left, rgba(59, 130, 246, 0.22), rgba(15, 23, 42, 0.95));
 }
 
 .admin-table button {
-  background: none;
+  background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin: 0 0.25rem;
+  color: #e5e7eb;
+  transition: transform 0.15s ease, color 0.15s ease;
 }
 
-/* Form admin */
+.admin-table button:hover {
+  transform: translateY(-1px) scale(1.04);
+  color: #38bdf8;
+}
+
+/* ==================== ADMIN FORM ==================== */
 .admin-form {
-  background: var(--light-gray);
+  background: rgba(15, 23, 42, 0.85);
   padding: 1.5rem;
-  border-radius: var(--radius);
+  border-radius: 1.25rem;
   margin: 1.5rem 0;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.7);
 }
 
 .admin-form h3 {
   margin-bottom: 1rem;
+  color: #e5e7eb;
 }
 
 .admin-form .form-row {
@@ -109,7 +213,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--dark);
+  color: #e5e7eb;
 }
 
 .admin-form input,
@@ -117,9 +221,11 @@
 .admin-form textarea {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 0.75rem;
   font-size: 0.9rem;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
 }
 
 .admin-form input:focus,
@@ -127,9 +233,10 @@
 .admin-form textarea:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.7);
 }
 
-/* Statistik grid */
+/* ==================== ADMIN STATS CARDS ==================== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -138,39 +245,45 @@
 }
 
 .stat-card {
-  background: var(--light-gray);
-  padding: 1.5rem;
-  border-radius: var(--radius);
+  background: radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), rgba(15, 23, 42, 1));
+  padding: 1.5rem 1.3rem;
+  border-radius: 1.25rem;
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--primary);
+  color: #a5f3fc;
   display: block;
 }
 
 .stat-card .stat-label {
-  color: var(--gray);
+  color: #9ca3af;
   font-size: 0.9rem;
 }
 
 /* Settings section */
 .settings-section {
-  background: var(--light-gray);
+  background: rgba(15, 23, 42, 0.9);
   padding: 1.5rem;
-  border-radius: var(--radius);
+  border-radius: 1.25rem;
   max-width: 500px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
 .settings-section h3 {
   margin-bottom: 1rem;
+  color: #e5e7eb;
 }
 
 .settings-section p {
   margin-bottom: 0.5rem;
+  color: #9ca3af;
 }
 
 .btn-danger-modern {
@@ -192,19 +305,63 @@
 /* Tombol ekspor khusus */
 .export-btn {
   background: transparent;
-  border: 2px solid #10B981;  /* warna hijau */
-  color: #10B981;
+  border: 1px solid rgba(45, 212, 191, 0.7);
+  color: #a5f3fc;
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: 999px;
   cursor: pointer;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s;
+  transition: all 0.25s;
+  font-size: 0.85rem;
+  background: radial-gradient(circle at top left, rgba(45, 212, 191, 0.15), rgba(15, 23, 42, 0.9));
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
 }
 
 .export-btn:hover {
-  background: #10B981;
-  color: white;
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  color: #ecfdf5;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 35px rgba(34, 197, 94, 0.45);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1024px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    padding: 1.25rem 1.5rem 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+  }
+
+  .admin-sidebar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .admin-sidebar li {
+    padding-inline: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .admin-content {
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-content {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .admin-form .form-row {
+    grid-template-columns: 1fr;
+  }
 }

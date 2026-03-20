@@ -541,6 +541,21 @@ body {
     gap: 0.5rem;
     position: relative;
     z-index: 1;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.progress-steps .step:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.progress-steps .step:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.35);
+    outline-offset: 4px;
+    border-radius: 12px;
 }
 
 .step-number {

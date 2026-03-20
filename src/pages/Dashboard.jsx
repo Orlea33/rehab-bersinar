@@ -50,9 +50,18 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
 // ==================== DASHBOARD A - OVERVIEW ====================
 const DashboardAOverview = ({ recommended, other, onCardClick }) => {
   return (
-    <>
-      <h2 style={{ marginBottom: '1.5rem' }}>Rekomendasi Personal Untukmu</h2>
-      <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+    <div className="dashboard-section">
+      <div className="dashboard-section-header">
+        <div>
+          <h2>🎯 Rekomendasi Personal Untukmu</h2>
+          <p>Dipilih otomatis oleh model Random Forest berdasarkan profil dan aktivitas belajar kamu.</p>
+        </div>
+        <div className="dashboard-section-chip">
+          <span className="chip-dot" /> Mode Kelompok A • Rekomendasi adaptif
+        </div>
+      </div>
+
+      <div className="content-grid dashboard-grid">
         {recommended.map(content => (
           <ContentCard
             key={content.id}
@@ -62,26 +71,41 @@ const DashboardAOverview = ({ recommended, other, onCardClick }) => {
           />
         ))}
       </div>
-      <h3 style={{ margin: '2rem 0 1rem' }}>Materi Lainnya</h3>
-      <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-        {other.map(content => (
-          <ContentCard
-            key={content.id}
-            content={content}
-            onClick={() => onCardClick(content)}
-          />
-        ))}
+
+      <div className="dashboard-section-sub">
+        <div className="dashboard-section-sub-header">
+          <h3>Materi Lainnya</h3>
+          <p>Eksplorasi materi tambahan di luar rekomendasi utama untuk memperluas wawasanmu.</p>
+        </div>
+        <div className="content-grid dashboard-grid">
+          {other.map(content => (
+            <ContentCard
+              key={content.id}
+              content={content}
+              onClick={() => onCardClick(content)}
+            />
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
 // ==================== DASHBOARD B - OVERVIEW ====================
 const DashboardBOverview = ({ contents, onCardClick }) => {
   return (
-    <>
-      <h2 style={{ marginBottom: '1.5rem' }}>Semua Materi Edukasi</h2>
-      <div className="content-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+    <div className="dashboard-section">
+      <div className="dashboard-section-header">
+        <div>
+          <h2>📚 Semua Materi Edukasi</h2>
+          <p>Akses bebas ke seluruh konten edukasi. Pilih materi sesuai kebutuhanmu.</p>
+        </div>
+        <div className="dashboard-section-chip">
+          <span className="chip-dot" /> Mode Kelompok B • Akses bebas
+        </div>
+      </div>
+
+      <div className="content-grid dashboard-grid">
         {contents.map(content => (
           <ContentCard
             key={content.id}
@@ -90,20 +114,25 @@ const DashboardBOverview = ({ contents, onCardClick }) => {
           />
         ))}
       </div>
-    </>
+    </div>
   )
 }
 
 // ==================== REKOMENDASI PAGE (khusus Grup A) ====================
 const RecommendationsPage = ({ recommendations, onCardClick }) => {
   return (
-    <div className="recommendations-page">
-      <h2>🤖 Semua Rekomendasi (Random Forest)</h2>
-      <p style={{ marginBottom: '1.5rem', color: 'var(--gray)' }}>
-        Berikut adalah semua materi yang direkomendasikan untuk Anda, diurutkan dari yang paling cocok.
-        Setiap materi disertai dengan confidence score dan alasan rekomendasi berdasarkan profil Anda.
-      </p>
-      <div className="content-grid">
+    <div className="dashboard-section recommendations-page">
+      <div className="dashboard-section-header">
+        <div>
+          <h2>🤖 Semua Rekomendasi (Random Forest)</h2>
+          <p>
+            Daftar lengkap materi yang disarankan untukmu, sudah diurutkan dari yang paling relevan.
+            Lihat juga alasan dan confidence score di setiap kartu.
+          </p>
+        </div>
+      </div>
+
+      <div className="content-grid dashboard-grid">
         {recommendations.map(item => (
           <div key={item.materi.id} className="recommendation-item">
             <ContentCard
@@ -111,15 +140,7 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
               showConfidence={true}
               onClick={() => onCardClick(item.materi)}
             />
-            <div className="recommendation-reason" style={{
-              marginTop: '0.5rem',
-              fontSize: '0.9rem',
-              color: 'var(--gray)',
-              background: '#f0f9ff',
-              padding: '0.75rem',
-              borderRadius: '8px',
-              borderLeft: '4px solid var(--accent)'
-            }}>
+            <div className="recommendation-reason">
               <strong>🧠 Alasan:</strong> {item.reason}
             </div>
           </div>
@@ -157,8 +178,21 @@ const Progress = ({ user }) => {
     fetchData()
   }, [showToast]) // tidak perlu dependensi user karena API tidak pakai parameter
 
-  if (loading) return <div>Memuat progress...</div>
-  if (!progress) return <div>Gagal memuat data</div>
+  if (loading) {
+    return (
+      <div className="progress-modern">
+        <div className="stats-bar-loading">Memuat progress belajar kamu...</div>
+      </div>
+    )
+  }
+
+  if (!progress) {
+    return (
+      <div className="progress-modern">
+        <div className="stats-bar-loading">Gagal memuat data progress.</div>
+      </div>
+    )
+  }
 
   const {
     total_materi,
@@ -270,7 +304,13 @@ const Achievements = ({ user }) => {
     fetchAchievements()
   }, [showToast])
 
-  if (loading) return <div>Memuat achievements...</div>
+  if (loading) {
+    return (
+      <div className="achievements-modern">
+        <div className="stats-bar-loading">Memuat daftar pencapaian kamu...</div>
+      </div>
+    )
+  }
 
   const unlockedCount = achievements.filter(a => a.unlocked).length
 
@@ -377,11 +417,17 @@ const PostTest = ({ onComplete, user }) => {
     }
   }
 
-  if (loading) return <div>Memuat status post-test...</div>
+  if (loading) {
+    return (
+      <div className="assessment-container posttest-modern">
+        <div className="stats-bar-loading">Memuat status post-test...</div>
+      </div>
+    )
+  }
 
   if (alreadySubmitted) {
     return (
-      <div style={{ textAlign: 'center', padding: '3rem' }}>
+      <div className="assessment-container posttest-summary">
         <h2>📝 Post-Test Sudah Dikerjakan</h2>
         <p>Anda telah menyelesaikan post-test. Terima kasih.</p>
         <p>Skor Anda dapat dilihat di halaman Progress.</p>
@@ -391,7 +437,7 @@ const PostTest = ({ onComplete, user }) => {
 
   if (submitted) {
     return (
-      <div style={{ textAlign: 'center', padding: '3rem' }}>
+      <div className="assessment-container posttest-summary">
         <h2>📝 Post-Test Selesai</h2>
         <p>Terima kasih telah mengerjakan post-test.</p>
         <p>Skor Anda: {Object.values(answers).filter(v => v === 'correct').length}/{questionsData.length}</p>
@@ -400,34 +446,28 @@ const PostTest = ({ onComplete, user }) => {
   }
 
   return (
-    <div className="assessment-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <h2 style={{ marginBottom: '1.5rem' }}>📝 Post-Test Pengetahuan</h2>
-      <p style={{ marginBottom: '1rem' }}>Jawablah pertanyaan berikut untuk mengukur pemahaman Anda setelah belajar.</p>
+    <div className="assessment-container posttest-modern">
+      <h2>📝 Post-Test Pengetahuan</h2>
+      <p>Jawablah pertanyaan berikut untuk mengukur pemahaman Anda setelah belajar.</p>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div className="posttest-header">
         <span>Halaman {currentPage + 1} dari {totalPages}</span>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="posttest-dots">
           {Array.from({ length: totalPages }).map((_, idx) => (
             <div
               key={idx}
-              style={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                backgroundColor: idx === currentPage ? 'var(--primary)' : '#e5e7eb',
-              }}
+              className={`dot ${idx === currentPage ? 'active' : ''}`}
             />
           ))}
         </div>
       </div>
 
       {currentQuestions.map((q, index) => (
-        <div key={q.id} className="form-group" style={{ marginBottom: '2rem' }}>
+        <div key={q.id} className="form-group posttest-question">
           <label>{startIdx + index + 1}. {q.text}</label>
           <select
             value={answers[q.id] || ''}
             onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-            style={{ width: '100%' }}
           >
             <option value="">Pilih jawaban...</option>
             {q.options.map(opt => (
@@ -437,9 +477,9 @@ const PostTest = ({ onComplete, user }) => {
         </div>
       ))}
 
-      <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+      <div className="posttest-actions">
         {currentPage > 0 && (
-          <button className="btn btn-outline" onClick={handlePrev} style={{ flex: 1 }}>
+          <button className="btn btn-outline" onClick={handlePrev}>
             ← Sebelumnya
           </button>
         )}
@@ -448,11 +488,6 @@ const PostTest = ({ onComplete, user }) => {
             className="btn btn-white"
             onClick={handleNext}
             disabled={!isCurrentPageComplete}
-            style={{
-              flex: 1,
-              opacity: isCurrentPageComplete ? 1 : 0.5,
-              cursor: isCurrentPageComplete ? 'pointer' : 'not-allowed'
-            }}
           >
             Selanjutnya →
           </button>
@@ -461,11 +496,6 @@ const PostTest = ({ onComplete, user }) => {
             className="btn btn-white"
             onClick={handleSubmit}
             disabled={!isCurrentPageComplete}
-            style={{
-              flex: 1,
-              opacity: isCurrentPageComplete ? 1 : 0.5,
-              cursor: isCurrentPageComplete ? 'pointer' : 'not-allowed'
-            }}
           >
             Selesai & Kirim
           </button>

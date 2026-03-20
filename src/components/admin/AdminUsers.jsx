@@ -43,44 +43,49 @@ const AdminUsers = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2>Manajemen Pengguna</h2>
-        <button className="export.btn" onClick={handleExport}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
+        <div>
+          <h2>Manajemen Pengguna</h2>
+          <p className="admin-content-subtitle">Lihat data lengkap peserta dan ekspor ke CSV untuk analisis lebih lanjut.</p>
+        </div>
+        <button className="export-btn" onClick={handleExport}>
           ⬇️ Ekspor CSV
         </button>
       </div>
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nama</th>
-            <th>Usia</th>
-            <th>Gender</th>
-            <th>Pendidikan</th>
-            <th>Kecamatan</th>
-            <th>Pretest</th>
-            <th>Group</th>
-            <th>Admin</th>
-            <th>Dibuat</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.id}</td>
-              <td>{u.nama}</td>
-              <td>{u.usia}</td>
-              <td>{u.gender}</td>
-              <td>{u.pendidikan}</td>
-              <td>{u.kecamatan}</td>
-              <td>{u.pretest_score}/15</td>
-              <td>{u.group}</td>
-              <td>{u.is_admin ? 'Ya' : 'Tidak'}</td>
-              <td>{new Date(u.created_at).toLocaleDateString()}</td>
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nama</th>
+              <th>Usia</th>
+              <th>Gender</th>
+              <th>Pendidikan</th>
+              <th>Kecamatan</th>
+              <th>Pretest</th>
+              <th>Group</th>
+              <th>Admin</th>
+              <th>Dibuat</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id}>
+                <td>{u.id}</td>
+                <td>{u.nama}</td>
+                <td>{u.usia}</td>
+                <td>{u.gender}</td>
+                <td>{u.pendidikan}</td>
+                <td>{u.kecamatan}</td>
+                <td>{u.pretest_score}/15</td>
+                <td>{u.group}</td>
+                <td>{u.is_admin ? 'Ya' : 'Tidak'}</td>
+                <td>{new Date(u.created_at).toLocaleDateString('id-ID')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

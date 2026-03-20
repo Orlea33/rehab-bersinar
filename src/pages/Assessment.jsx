@@ -6,6 +6,7 @@ import { register } from '../services/api';
 
 const Assessment = () => {
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     nama: '', password: '', usia: '', gender: '', pendidikan: '', kecamatan: '',
     informedConsent: false, format: '', waktu: '', topik: ''
@@ -34,6 +35,15 @@ const Assessment = () => {
     return true;
   };
 
+  const isStep1ValidForNavigation = () => {
+    const { nama, password, usia, gender, pendidikan, kecamatan, informedConsent } = formData;
+    if (!nama || !password || !usia || !gender || !pendidikan || !kecamatan || !informedConsent) return false;
+    if (password.length < 6) return false;
+    return true;
+  };
+
+  const isPretestCompleted = () => Object.keys(pretestAnswers || {}).length > 0;
+
   const validateStep3 = () => {
     const { format, waktu, topik } = formData;
     if (!format || !waktu || !topik) {
@@ -42,6 +52,34 @@ const Assessment = () => {
     }
     return true;
   };
+
+  const handleGoToStep = (targetStep) => {
+    if (targetStep === 1) {
+      setStep(1)
+      return
+    }
+
+    if (targetStep === 2) {
+      if (!isStep1ValidForNavigation()) {
+        validateStep1()
+        return
+      }
+      setStep(2)
+      return
+    }
+
+    if (targetStep === 3) {
+      if (!isStep1ValidForNavigation()) {
+        validateStep1()
+        return
+      }
+      if (!isPretestCompleted()) {
+        alert('Selesaikan pre-test terlebih dahulu sebelum mengisi preferensi.')
+        return
+      }
+      setStep(3)
+    }
+  }
 
   const handleNext = () => {
     if (step === 1 && !validateStep1()) return;
@@ -57,6 +95,10 @@ const Assessment = () => {
   };
 
   const handleSubmit = async () => {
+    if (!validateStep1()) {
+      setStep(1)
+      return
+    }
     if (!validateStep3()) return;
 
     setLoading(true);
@@ -97,18 +139,38 @@ const Assessment = () => {
 
       {/* Progress Steps */}
       <div className="progress-steps">
-        <div className={`step ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`} id="step-1-indicator">
+        <button
+          type="button"
+          className={`step ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}
+          id="step-1-indicator"
+          onClick={() => handleGoToStep(1)}
+        >
           <div className="step-number">1</div>
           <div className="step-label">Registrasi</div>
-        </div>
-        <div className={`step ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`} id="step-2-indicator">
+        </button>
+
+        <button
+          type="button"
+          className={`step ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`}
+          id="step-2-indicator"
+          disabled={!isStep1ValidForNavigation()}
+          onClick={() => handleGoToStep(2)}
+        >
           <div className="step-number">2</div>
           <div className="step-label">Pre-test</div>
-        </div>
-        <div className={`step ${step >= 3 ? 'active' : ''} ${step > 3 ? 'completed' : ''}`} id="step-3-indicator">
+        </button>
+
+        <button
+          type="button"
+          className={`step ${step >= 3 ? 'active' : ''} ${step > 3 ? 'completed' : ''}`}
+          id="step-3-indicator"
+          disabled={!isStep1ValidForNavigation() || !isPretestCompleted()}
+          onClick={() => handleGoToStep(3)}
+        >
           <div className="step-number">3</div>
           <div className="step-label">Preferensi</div>
-        </div>
+        </button>
+
         <div className={`step ${step >= 4 ? 'active' : ''}`} id="step-4-indicator">
           <div className="step-number">4</div>
           <div className="step-label">RF Proses</div>
@@ -127,7 +189,80 @@ const Assessment = () => {
 
           <div className="form-group">
             <label>Password</label>
-            <input type="password" id="password" placeholder="Minimal 6 karakter" value={formData.password} onChange={handleChange} />
+            <div className="password-field">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Minimal 6 karakter"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+              >
+                {showPassword ? (
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-6 0-10-8-10-8a21.73 21.73 0 0 1 5.06-7.2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M9.88 9.88a3 3 0 0 0 4.24 4.24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M10.73 5.08A10.43 10.43 0 0 1 12 4c6 0 10 8 10 8a21.8 21.8 0 0 1-4.13 5.02"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M1 1l22 22"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path
+                      d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="form-row">
