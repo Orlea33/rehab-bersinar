@@ -16,6 +16,20 @@ import {
 } from '../services/api'
 import questionsData from '../data/questions'
 
+// ==================== SVG ICON HELPER ====================
+const Icon = ({ name }) => {
+  const icons = {
+    overview: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>,
+    recommendations: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 2a10 10 0 0 1 10 10h-7V5l-3-3z"></path></svg>,
+    all: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>,
+    progress: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>,
+    achievements: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>,
+    posttest: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>,
+    settings: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+  };
+  return icons[name] || null;
+};
+
 // ==================== SIDEBAR ====================
 const Sidebar = ({ activeTab, setActiveTab, user }) => {
   const isGroupA = user?.group === 'A'
@@ -25,23 +39,60 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
         <div className="avatar" id="dashboardAvatar">
           {user?.nama?.charAt(0).toUpperCase() || 'A'}
         </div>
-        <div className="user-name" id="dashboardName">{user?.nama || 'Andi Wijaya'}</div>
-        <div className="user-group" id="dashboardGroup">
-          {isGroupA ? 'Kelompok A - Rekomendasi Personal (Random Forest)' : 'Kelompok B - Akses Bebas (Kontrol)'}
+        <div className="user-info-text">
+          <div className="user-name" id="dashboardName">{user?.nama || 'Andi Wijaya'}</div>
+          <div className="user-group" id="dashboardGroup">
+            {isGroupA ? 'Grup A - Personal' : 'Grup B - Bebas'}
+          </div>
         </div>
       </div>
 
       <ul className="sidebar-menu">
-        <li><a href="#" className={activeTab === 'overview' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('overview') }}>📊 Overview</a></li>
+        <li>
+          <a href="#" className={activeTab === 'overview' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('overview') }}>
+            <span className="sidebar-icon"><Icon name="overview" /></span>
+            <span className="sidebar-label">Overview</span>
+          </a>
+        </li>
         {isGroupA ? (
-          <li><a href="#" className={activeTab === 'recommendations' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('recommendations') }}>🤖 Rekomendasi</a></li>
+          <li>
+            <a href="#" className={activeTab === 'recommendations' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('recommendations') }}>
+              <span className="sidebar-icon"><Icon name="recommendations" /></span>
+              <span className="sidebar-label">Rekomendasi</span>
+            </a>
+          </li>
         ) : (
-          <li><a href="#" className={activeTab === 'all' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('all') }}>📚 Semua Materi</a></li>
+          <li>
+            <a href="#" className={activeTab === 'all' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('all') }}>
+              <span className="sidebar-icon"><Icon name="all" /></span>
+              <span className="sidebar-label">Materi</span>
+            </a>
+          </li>
         )}
-        <li><a href="#" className={activeTab === 'progress' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('progress') }}>📈 Progress</a></li>
-        <li><a href="#" className={activeTab === 'achievements' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('achievements') }}>🏆 Achievements</a></li>
-        <li><a href="#" className={activeTab === 'posttest' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('posttest') }}>📝 Post-Test</a></li>
-        <li><a href="#" className={activeTab === 'settings' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('settings') }}>⚙️ Settings</a></li>
+        <li>
+          <a href="#" className={activeTab === 'progress' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('progress') }}>
+            <span className="sidebar-icon"><Icon name="progress" /></span>
+            <span className="sidebar-label">Progress</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" className={activeTab === 'achievements' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('achievements') }}>
+            <span className="sidebar-icon"><Icon name="achievements" /></span>
+            <span className="sidebar-label">Achievements</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" className={activeTab === 'posttest' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('posttest') }}>
+            <span className="sidebar-icon"><Icon name="posttest" /></span>
+            <span className="sidebar-label">Post-Test</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" className={activeTab === 'settings' ? 'active' : ''} onClick={(e) => { e.preventDefault(); setActiveTab('settings') }}>
+            <span className="sidebar-icon"><Icon name="settings" /></span>
+            <span className="sidebar-label">Settings</span>
+          </a>
+        </li>
       </ul>
     </aside>
   )
@@ -152,7 +203,8 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
 
 // ==================== PROGRESS ====================
 // Komponen ini sekarang menggunakan user dari props, tapi API dipanggil tanpa parameter
-const Progress = ({ user }) => {
+// ==================== PROGRESS ====================
+const Progress = ({ user, refreshKey }) => {
   const { showToast } = useToast()
   const [progress, setProgress] = useState(null)
   const [weekData, setWeekData] = useState([])
@@ -161,7 +213,6 @@ const Progress = ({ user }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // getUserProgress dan getUserWeeklyActivity tidak perlu parameter
         const [progressRes, activityRes] = await Promise.all([
           getUserProgress(),
           getUserWeeklyActivity()
@@ -176,105 +227,91 @@ const Progress = ({ user }) => {
       }
     }
     fetchData()
-  }, [showToast]) // tidak perlu dependensi user karena API tidak pakai parameter
+  }, [showToast, refreshKey])
 
-  if (loading) {
-    return (
-      <div className="progress-modern">
-        <div className="stats-bar-loading">Memuat progress belajar kamu...</div>
-      </div>
-    )
-  }
+  if (loading) return <div className="progress-modern"><div className="stats-bar-loading">Memuat progress...</div></div>
+  if (!progress) return <div className="progress-modern"><div className="stats-bar-loading">Gagal memuat data.</div></div>
 
-  if (!progress) {
-    return (
-      <div className="progress-modern">
-        <div className="stats-bar-loading">Gagal memuat data progress.</div>
-      </div>
-    )
-  }
-
-  const {
-    total_materi,
-    completed_count,
-    total_duration,
-    streak,
-    consistency,
-    pretest_score,
-    posttest_score
-  } = progress
-
+  const { total_materi, completed_count, total_duration, streak, consistency, pretest_score, posttest_score } = progress
   const percentage = total_materi > 0 ? Math.round((completed_count / total_materi) * 100) : 0
   const totalMinutes = Math.round(total_duration / 60)
+  const todayDayName = new Date().toLocaleDateString('id-ID', { weekday: 'short' });
 
-  const displayWeekData = weekData.length > 0 ? weekData : []
+  const statCards = [
+    { emoji: '⏱️', num: totalMinutes, label: 'Menit Belajar', color: '#10B981' },
+    { emoji: '🔥', num: streak, label: 'Hari Streak', color: '#EF4444' },
+    { emoji: '📊', num: `${consistency}%`, label: 'Konsistensi', color: '#3B82F6' },
+    { emoji: '🏆', num: posttest_score || '-', label: 'Skor Akhir', color: '#F59E0B' }
+  ];
 
   return (
-    <div className="progress-modern">
-      <h2 className="progress-title">📈 Progress Belajar</h2>
+    <div className="progress-universal">
+      <div className="progress-header-flex">
+        <h2 className="progress-title">📈 Ringkasan Belajar</h2>
+        <div className="user-badge-premium">Grup {user?.group || 'B'}</div>
+      </div>
 
-      <div className="progress-grid">
-        <div className="progress-card highlight">
-          <div className="circular-progress-modern">
-            <svg viewBox="0 0 36 36">
-              <path className="circle-bg-modern" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              <path className="circle-fill-modern" strokeDasharray={`${percentage}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+      <div className="progress-top-grid">
+        {/* Ringkasan Utama dengan Animasi Lingkaran */}
+        <div className="main-stats-card">
+          <div className="circular-container">
+            <svg viewBox="0 0 36 36" className="circular-chart">
+              <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path className="circle-fill" strokeDasharray={`${percentage}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
             </svg>
-            <div className="circle-text">
-              <span className="big-number">{percentage}%</span>
-              <span>Overall</span>
+            <div className="percentage-display">
+              <span className="pct-num">{percentage}%</span>
+              <span className="pct-label">Progres</span>
             </div>
           </div>
-          <div className="progress-details">
-            <p><strong>{completed_count}/{total_materi}</strong> modul selesai</p>
-            <p>Pretest: <strong>{pretest_score}/15</strong> | Post-test: <strong>{posttest_score || '-'}/15</strong></p>
+          <div className="stats-info-text">
+            <h3>Halo, {user?.nama?.split(' ')[0]}!</h3>
+            <p>Modul Selesai: <strong>{completed_count}/{total_materi}</strong></p>
+            <div className="test-badge-container">
+              <span className="test-pill">Pre: {pretest_score}</span>
+              <span className="test-pill">Post: {posttest_score || '-'}</span>
+            </div>
           </div>
         </div>
 
-        <div className="stats-grid-modern">
-          <div className="stat-card-modern">
-            <span className="stat-emoji">⏱️</span>
-            <div>
-              <span className="stat-num">{totalMinutes}</span>
-              <span className="stat-label">Menit</span>
-            </div>
-          </div>
-          <div className="stat-card-modern">
-            <span className="stat-emoji">🔥</span>
-            <div>
-              <span className="stat-num">{streak}</span>
-              <span className="stat-label">Streak</span>
-            </div>
-          </div>
-          <div className="stat-card-modern">
-            <span className="stat-emoji">📊</span>
-            <div>
-              <span className="stat-num">{consistency}%</span>
-              <span className="stat-label">Konsistensi</span>
-            </div>
-          </div>
-          <div className="stat-card-modern">
-            <span className="stat-emoji">🏆</span>
-            <div>
-              <span className="stat-num">-</span>
-              <span className="stat-label">Achievements</span>
-            </div>
+        {/* Kartu Statistik - Swipe di Mobile, Grid di Desktop */}
+        <div className="stats-cards-scroll-container">
+          <div className="stats-cards-track">
+            {statCards.map((card, i) => (
+              <div key={i} className="interactive-stat-card" style={{"--card-accent": card.color}}>
+                <div className="stat-card-icon">{card.emoji}</div>
+                <div className="stat-card-data">
+                  <span className="data-val">{card.num}</span>
+                  <span className="data-lbl">{card.label}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="activity-modern">
-        <h3>Aktivitas Minggu Ini</h3>
-        <div className="chart-modern">
-          {displayWeekData.map((item) => {
-            const maxMinutes = Math.max(...displayWeekData.map(d => d.minutes), 1)
-            const heightPercent = (item.minutes / maxMinutes) * 100
+      {/* Grafik Aktivitas Interaktif */}
+      <div className="activity-chart-card">
+        <div className="activity-header">
+          <h3>Aktivitas Minggu Ini</h3>
+          <span className="total-time-tag">{totalMinutes} Menit</span>
+        </div>
+        <div className="chart-bars-flex">
+          {weekData.map((item) => {
+            const maxVal = Math.max(...weekData.map(d => d.minutes), 1);
+            const barHeight = (item.minutes / maxVal) * 100;
+            const todayDayName = new Date().toLocaleDateString('id-ID', { weekday: 'short' });
+            const isToday = item.day === todayDayName;
             return (
-              <div key={item.day} className="chart-bar">
-                <div className="bar-fill" style={{ height: `${heightPercent}%` }}></div>
-                <span>{item.day}</span>
+              <div key={item.day} className={`bar-item ${isToday ? 'active-today' : ''}`}>
+                <div className="bar-column">
+                  <div className="bar-fill-animated" style={{ height: `${barHeight}%` }}>
+                    {item.minutes > 0 && <span className="bar-tooltip">{item.minutes}m</span>}
+                  </div>
+                </div>
+                <span className="bar-name">{item.day}</span>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -634,6 +671,13 @@ const Dashboard = () => {
   const [selectedContent, setSelectedContent] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
+  const [refreshProgressKey, setRefreshProgressKey] = useState(0);
+
+  const refreshProgress = () => {
+    setRefreshProgressKey(prev => prev + 1);
+  };
+
+
   useEffect(() => {
     if (!user) {
       navigate('/assessment')
@@ -710,7 +754,7 @@ const Dashboard = () => {
         {!isGroupA && activeTab === 'all' && (
           <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
         )}
-        {activeTab === 'progress' && <Progress user={user} />}
+        {activeTab === 'progress' && <Progress user={user} refreshKey={refreshProgressKey} />}
         {activeTab === 'achievements' && <Achievements user={user} />}
         {activeTab === 'posttest' && <PostTest onComplete={handlePostTestComplete} user={user} />}
         {activeTab === 'settings' && <Settings user={user} onLogout={handleLogout} />}
@@ -720,6 +764,7 @@ const Dashboard = () => {
           content={selectedContent}
           onClose={() => setShowModal(false)}
           user={user}
+          onInteractionComplete={refreshProgress}
         />
       )}
     </div>

@@ -6,6 +6,18 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
+// ✅ Interceptor untuk menambahkan token ke setiap request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 console.log('✅ api.js loaded, baseURL:', api.defaults.baseURL);
 
 export default api;

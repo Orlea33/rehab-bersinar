@@ -30,7 +30,7 @@ const ReadMoreText = ({ text, previewLength = 200 }) => {
   );
 };
 
-const ContentDetailModal = ({ content, onClose, user }) => {
+const ContentDetailModal = ({ content, onClose, user, onInteractionComplete }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState('');
   const [completed, setCompleted] = useState(false);
@@ -46,18 +46,29 @@ const ContentDetailModal = ({ content, onClose, user }) => {
   const handleClose = () => {
     if (startTime && user) {
       const duration = Math.round((Date.now() - startTime) / 1000);
-      trackClose({ user_id: user.id, materi_id: content.id, duration }).catch(console.error);
+      trackClose({ user_id: user.id, materi_id: content.id, duration })
+        .then(() => {
+          if (onInteractionComplete) onInteractionComplete();
+          onClose();
+        })
+        .catch(console.error);
+    } else {
+      if (onInteractionComplete) onInteractionComplete();
+      onClose();
     }
-    onClose();
   };
 
-  const handleMarkComplete = () => {
-    setCompleted(true);
-    if (user) {
-      trackComplete({ user_id: user.id, materi_id: content.id }).catch(console.error);
-    }
-    alert('Materi ditandai selesai!');
-  };
+const handleMarkComplete = () => {
+  setCompleted(true);
+  if (user) {
+    trackComplete({ user_id: user.id, materi_id: content.id })
+      .then(() => {
+        if (onInteractionComplete) onInteractionComplete();
+      })
+      .catch(console.error);
+  }
+  alert('Materi ditandai selesai!');
+};
 
   if (!content) return null;
 

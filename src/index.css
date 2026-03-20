@@ -935,6 +935,22 @@ body {
     cursor: pointer;
 }
 
+.sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    background: rgba(16, 185, 129, 0.08);
+    font-size: 1.05rem;
+}
+
+.sidebar-label {
+    display: inline-block;
+    white-space: nowrap;
+}
+
 .sidebar-menu a:hover,
 .sidebar-menu a.active {
     background: var(--primary-light);
@@ -1240,6 +1256,95 @@ footer {
     
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    /* Dashboard: convert left sidebar into bottom navigation */
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        border-radius: 22px 22px 0 0;
+        padding: 0.85rem 0.9rem 0.95rem;
+        z-index: 1600;
+        margin: 0;
+        box-shadow: 0 -20px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    /* Keep the profile compact in bottom bar */
+    .user-profile {
+        border-bottom: none;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .user-group {
+        display: none;
+    }
+
+    .user-name {
+        font-size: 0.85rem;
+        line-height: 1.1;
+        text-align: left;
+    }
+
+    .sidebar-menu {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.25rem 0.35rem;
+        padding: 0;
+        width: 100%;
+    }
+
+    .sidebar-menu li {
+        margin-bottom: 0;
+    }
+
+    .sidebar-menu a {
+        flex-direction: column;
+        gap: 0.35rem;
+        padding: 0.55rem 0.25rem;
+        border-radius: 14px;
+        font-size: 0.75rem;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+        background: var(--primary-light);
+    }
+
+    .sidebar-menu a .sidebar-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 16px;
+    }
+
+    .sidebar-menu a .sidebar-label {
+        display: none;
+    }
+
+    /* prevent content from hiding behind bottom bar */
+    .main-content {
+        padding-bottom: 9.5rem;
     }
 }
 .btn-logout {
@@ -2016,59 +2121,236 @@ footer {
     transform: translateY(-2px);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .path-header-modern {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .path-stats-modern {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .timeline-modern {
-        padding-left: 0;
-    }
-
-    .timeline-step {
-        flex-direction: column;
-    }
-
-    .step-connector {
-        flex-direction: row;
-        width: 100%;
-        height: 40px;
-    }
-
-    .step-line {
-        width: 100%;
-        height: 4px;
-        margin: 0 0.5rem;
-        min-height: auto;
-    }
-
-    .step-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .progress-grid {
+    .dashboard-layout {
         grid-template-columns: 1fr;
     }
+
+    /* Side Bar Berubah Jadi Bottom Bar Tipis */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        border-radius: 24px 24px 0 0;
+        padding: 0.4rem 0.5rem 0.6rem !important; /* Sangat tipis */
+        z-index: 1600;
+        margin: 0;
+        box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.15);
+        height: auto;
+    }
+
+    /* Sembunyikan profil di mobile agar tidak sesak */
+    .user-profile {
+        display: none !important;
+    }
+
+    /* Menu Berjejer Horizontal */
+    .sidebar-menu {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr) !important; /* 6 kolom menu */
+        gap: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .sidebar-menu li {
+        margin-bottom: 0;
+    }
+
+    .sidebar-menu a {
+        flex-direction: column;
+        gap: 0;
+        padding: 0.5rem 0;
+        border-radius: 12px;
+        background: transparent !important;
+    }
+
+    /* Ikon Kecil Minimalis */
+    .sidebar-menu a .sidebar-icon {
+        width: 32px;
+        height: 32px;
+        background: transparent !important;
+        color: #94a3b8; /* Warna abu-abu saat tidak aktif */
+        margin-bottom: 0;
+    }
+
+    /* Ikon Berwarna Saat Aktif */
+    .sidebar-menu a.active .sidebar-icon {
+        color: var(--primary);
+    }
+
+    /* Sembunyikan Teks Label di Mobile */
+    .sidebar-menu a .sidebar-label {
+        display: none !important;
+    }
+
+    /* Beri jarak konten agar tidak tertutup bar bawah */
+    .main-content {
+        padding: 1rem 1rem 4.5rem !important;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+  /* interaktif progress ui */
+
+    .interactive-progress { padding-bottom: 2rem; }
     
-    .stats-grid-modern {
-        grid-template-columns: 1fr;
+    .progress-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
     }
 
-    .achievement-grid-modern {
-        grid-template-columns: 1fr;
+    .group-badge-mobile {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
-    .form-row-modern {
-        grid-template-columns: 1fr;
+    /* Card Utama Horizontal */
+    .main-percentage-card-interactive {
+        background: white;
+        border-radius: 24px;
+        padding: 1.25rem;
+        display: flex !important;
+        align-items: center;
+        gap: 1.25rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
     }
+
+    .circular-progress-interactive {
+        width: 100px; height: 100px;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .circular-progress-interactive svg { transform: rotate(-90deg); }
+
+    .circle-fill-interactive {
+        fill: none; stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round;
+        stroke-dasharray: 0, 100;
+        animation: fillAnim 1.5s ease-out forwards;
+    }
+
+    @keyframes fillAnim { to { stroke-dasharray: var(--percentage, 70), 100; } }
+
+    .circle-text-interactive {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .circle-text-interactive .big-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); display: block; }
+    .circle-text-interactive span { font-size: 0.65rem; color: var(--gray); }
+
+    .score-pill-mobile {
+        display: inline-block; background: #f1f5f9; padding: 0.2rem 0.6rem;
+        border-radius: 10px; font-size: 0.75rem; color: var(--gray); font-weight: 600;
+    }
+
+    /* Swipeable Stats Track */
+    .swipe-stats-wrapper { margin-bottom: 1.5rem; overflow: hidden; }
+    .swipe-stats-track {
+        display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+        gap: 1rem; padding: 0.5rem 0.2rem 1rem; scrollbar-width: none;
+    }
+    .swipe-stats-track::-webkit-scrollbar { display: none; }
+
+    .stat-card-swipe {
+        flex: 0 0 65%; scroll-snap-align: center;
+        background: white; border-radius: 20px; padding: 1.25rem;
+        display: flex; align-items: center; gap: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        border-left: 5px solid var(--accent-color);
+    }
+
+    .stat-icon-swipe { font-size: 2rem; background: #f8fafc; padding: 0.5rem; border-radius: 12px; }
+    .stat-v { display: block; font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+    .stat-l { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; }
+    .swipe-hint-text { text-align: center; font-size: 0.65rem; color: #cbd5e1; margin-top: -0.5rem; }
+
+    /* Activity Chart Mobile */
+    .activity-card-interactive {
+        background: white; border-radius: 24px; padding: 1.5rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    .activity-header-mobile { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+    .activity-header-mobile h3 { font-size: 1rem; }
+    .activity-header-mobile span { font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+
+    .chart-interactive-mobile { display: flex; justify-content: space-between; align-items: flex-end; height: 120px; }
+    .bar-container-mobile { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; }
+    .bar-wrapper-mobile { width: 14px; background: #f1f5f9; border-radius: 20px; height: 100%; position: relative; margin-bottom: 0.5rem; }
+    .bar-fill-mobile { 
+        width: 100%; background: var(--primary); border-radius: 20px; 
+        position: absolute; bottom: 0; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+    .is-today .bar-fill-mobile { background: var(--accent); }
+    .bar-tip {
+        position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+        font-size: 0.6rem; font-weight: 800; color: var(--primary);
+    }
+    .bar-label-mobile { font-size: 0.65rem; color: var(--gray); font-weight: 600; }
+    .is-today .bar-label-mobile { color: var(--accent); font-weight: 800; }
+
+}
+
+/* --- UNIVERSAL PROGRESS STYLES --- */
+.progress-universal { padding: 1rem 0; }
+.progress-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.user-badge-premium { background: var(--primary-light); color: var(--primary-dark); padding: 0.4rem 1.2rem; border-radius: 30px; font-weight: 700; font-size: 0.85rem; }
+
+.progress-top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+
+.main-stats-card { background: white; border-radius: 24px; padding: 2rem; display: flex; align-items: center; gap: 2rem; box-shadow: var(--shadow); border: 1px solid #f1f5f9; }
+.circular-container { position: relative; width: 120px; height: 120px; }
+.circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 3; }
+.circle-fill { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s ease; }
+.percentage-display { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.pct-num { font-size: 1.8rem; font-weight: 800; color: var(--primary); display: block; line-height: 1; }
+.pct-label { font-size: 0.65rem; color: var(--gray); text-transform: uppercase; }
+
+.test-pill { background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.2rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+
+.stats-cards-track { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.interactive-stat-card { background: white; padding: 1.5rem; border-radius: 20px; border: 1px solid #f1f5f9; display: flex; align-items: center; gap: 1rem; transition: transform 0.3s; box-shadow: var(--shadow-sm); }
+.interactive-stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--card-accent); }
+.stat-card-icon { font-size: 2rem; background: #f8fafc; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+.data-val { font-size: 1.4rem; font-weight: 800; display: block; color: var(--dark); }
+.data-lbl { font-size: 0.7rem; color: var(--gray); text-transform: uppercase; }
+
+/* Aktivitas Minggu Ini */
+.activity-chart-card { background: white; border-radius: 24px; padding: 2rem; box-shadow: var(--shadow); border: 1px solid #f1f5f9; }
+.chart-bars-flex { display: flex; justify-content: space-between; align-items: flex-end; height: 150px; padding-top: 2rem; }
+.bar-item { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; }
+.bar-column { width: 16px; background: #f1f5f9; border-radius: 20px; height: 100%; position: relative; margin-bottom: 0.5rem; }
+.bar-fill-animated { width: 100%; background: linear-gradient(to top, var(--primary), #34d399); border-radius: 20px; position: absolute; bottom: 0; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.active-today .bar-fill-animated { background: var(--accent); }
+.bar-tooltip { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; font-weight: 700; color: var(--primary); opacity: 0; transition: opacity 0.3s; }
+.bar-item:hover .bar-tooltip { opacity: 1; }
+
+/* --- RESPONSIVE MOBILE (Interaktif Swipe) --- */
+@media (max-width: 768px) {
+    .progress-top-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    
+    .main-stats-card { padding: 1.25rem; gap: 1rem; }
+    .circular-container { width: 90px; height: 90px; }
+
+    .stats-cards-scroll-container { margin: 0 -1rem; overflow-x: auto; padding: 0.5rem 1rem 1.5rem; scrollbar-width: none; }
+    .stats-cards-scroll-container::-webkit-scrollbar { display: none; }
+    
+    .stats-cards-track { display: flex; grid-template-columns: none; }
+    .interactive-stat-card { min-width: 220px; scroll-snap-align: center; }
+    
+    .chart-bars-flex { height: 120px; }
+    .bar-column { width: 12px; }
 }
 
 /* Modal Detail Materi */
