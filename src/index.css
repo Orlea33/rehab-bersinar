@@ -524,7 +524,59 @@ body {
         bottom: 30px;
         left: -20px;
     }
+    .hero-background {
+        background: linear-gradient(135deg, #5f6ac1 0%, #2d3b8c 100%) !important;
+        -webkit-background: linear-gradient(135deg, #5f6ac1 0%, #2d3b8c 100%) !important;
+    }
+    
+    .hero-background .top-right {
+        background: #8f9eff !important;
+        opacity: 0.6;
+    }
+    
+    .hero-background .bottom-left {
+        background: #3a49b0 !important;
+        opacity: 0.6;
+    }
+    
+    /* Fix color rendering di Safari iOS */
+    .hero {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Pastikan hero content warna text sama */
+    .hero-content {
+        color: white !important;
+    }
+    
+    .hero h1 {
+        color: white !important;
+    }
+    
+    .hero p {
+        color: rgba(255,255,255,0.85) !important;
+    }
 }
+
+/* Fix untuk Safari iOS color rendering */
+@supports (-webkit-touch-callout: none) {
+    /* CSS khusus iOS device */
+    .hero-background {
+        background: linear-gradient(135deg, #5f6ac1 0%, #2d3b8c 100%);
+        /* Pakai RGB untuk konsistensi */
+        background: linear-gradient(135deg, rgb(95, 106, 193) 0%, rgb(45, 59, 140) 100%);
+    }
+}
+
+/* Force hardware acceleration untuk consistent rendering */
+.hero-background {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
 
 /* Stats Bar */
 .stats-bar {
