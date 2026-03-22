@@ -198,7 +198,7 @@ body {
 
 /* Hero Section - Modern Premium */
 .hero {
-    background: #ffffff;
+    /* background: #ffffff; */
     border-radius: var(--radius-lg);
     padding: 6rem 4rem;
     position: relative;
@@ -216,7 +216,7 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #5f6ac1 0%, #2d3b8c 100%);
+  /* background: linear-gradient(135deg, #5f6ac1 0%, #2d3b8c 100%); */
   z-index: 0;
   overflow: hidden;
 }
