@@ -28,19 +28,19 @@ const StatsBar = () => {
 
   return (
     <div className="stats-bar">
-      <div className="stat-item">
+      <div className="stat-item animate-fade-in-up delay-100">
         <span className="stat-number">{stats.total_users}</span>
         <span className="stat-label">Pengguna Terdaftar</span>
       </div>
-      <div className="stat-item">
+      <div className="stat-item animate-fade-in-up delay-200">
         <span className="stat-number">{stats.total_materi}</span>
         <span className="stat-label">Materi Edukasi</span>
       </div>
-      <div className="stat-item">
+      <div className="stat-item animate-fade-in-up delay-300">
         <span className="stat-number">{stats.avg_understanding}%</span>
         <span className="stat-label">Tingkat Pemahaman ↑</span>
       </div>
-      <div className="stat-item">
+      <div className="stat-item animate-fade-in-up delay-400">
         <span className="stat-number">{stats.algorithm}</span>
         <span className="stat-label">Algoritma Aktif</span>
       </div>

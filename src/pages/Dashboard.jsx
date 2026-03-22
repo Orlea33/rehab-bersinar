@@ -238,7 +238,7 @@ const Progress = ({ user, refreshKey }) => {
   const todayDayName = new Date().toLocaleDateString('id-ID', { weekday: 'short' });
 
   const statCards = [
-    { emoji: '⏱️', num: totalMinutes, label: 'Menit Belajar', color: '#10B981' },
+    { emoji: '⏱️', num: totalMinutes, label: 'Menit Belajar', color: '#3B82F6' },
     { emoji: '🔥', num: streak, label: 'Hari Streak', color: '#EF4444' },
     { emoji: '📊', num: `${consistency}%`, label: 'Konsistensi', color: '#3B82F6' },
     { emoji: '🏆', num: posttest_score || '-', label: 'Skor Akhir', color: '#F59E0B' }
@@ -661,7 +661,7 @@ const Settings = ({ user, onLogout }) => {
 
 // ==================== DASHBOARD UTAMA ====================
 const Dashboard = () => {
-  const { user, logout } = useAuth()
+  const { user, loading, logout } = useAuth()
   const navigate = useNavigate()
   const { showToast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
@@ -679,6 +679,7 @@ const Dashboard = () => {
 
 
   useEffect(() => {
+    if (loading) return; // Tunggu sampi loading selesai
     if (!user) {
       navigate('/assessment')
       return
@@ -706,7 +707,7 @@ const Dashboard = () => {
     }
 
     fetchData()
-  }, [user, navigate, showToast])
+  }, [user, loading, navigate, showToast])
 
   const handleLogout = () => {
     if (window.confirm('Apakah Anda yakin ingin logout?')) {
@@ -731,6 +732,7 @@ const Dashboard = () => {
     setShowModal(true)
   }
 
+  if (loading) return <div className="progress-modern"><div className="stats-bar-loading">Memuat dashboard...</div></div>
   if (!user) return null
 
   const isGroupA = user.group === 'A'

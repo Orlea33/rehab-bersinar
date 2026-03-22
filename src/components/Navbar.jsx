@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import LoginModal from '../components/LoginModal'
-import { login as apiLogin } from '../services/api' // import fungsi login dari API
+import { GiHealing } from 'react-icons/gi'
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -27,20 +27,21 @@ const Navbar = () => {
   }, [])
 
   const handleLoginSuccess = (userData) => {
-  login(userData)
-  if (userData.is_admin) {
-    navigate('/admin')
-  } else {
-    navigate('/dashboard')
+    if (userData.is_admin) {
+      navigate('/admin')
+    } else {
+      navigate('/dashboard')
+    }
   }
-}
 
   return (
     <>
       <nav className="navbar" id="navbar">
         <div className="nav-container">
           <Link to="/" className="logo">
-            <div className="logo-icon">🌿</div>
+            <div className="logo-icon logo-icon-clean">
+              <GiHealing size={24} color="#5f6ac1" />
+            </div>
             RehabBersinar
           </Link>
           

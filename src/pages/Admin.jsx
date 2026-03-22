@@ -10,12 +10,13 @@ import AdminSettings from '../components/admin/AdminSettings'
 import './Admin.css'
 
 const Admin = () => {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
   const { showToast } = useToast()
   const [activeTab, setActiveTab] = useState('dashboard')
 
   useEffect(() => {
+    if (loading) return;
     if (!user) {
       navigate('/assessment')
       showToast('Silakan login terlebih dahulu')
@@ -23,8 +24,9 @@ const Admin = () => {
       navigate('/dashboard')
       showToast('Anda tidak memiliki akses ke halaman admin')
     }
-  }, [user, navigate, showToast])
+  }, [user, loading, navigate, showToast])
 
+  if (loading) return <div className="admin-container"><div style={{padding: '2rem', color: 'white'}}>Memuat admin...</div></div>
   if (!user || !user.is_admin) return null
 
   return (
