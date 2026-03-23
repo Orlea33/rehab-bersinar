@@ -34,7 +34,14 @@ const MLFeature = () => {
             <div className="ml-header">
               <span className="ml-badge">Mitra Edukasi</span>
             </div>
-            <h3>🏢 BNN Kota Manado</h3>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img 
+                src="images/BNN.png" 
+                alt="Logo BNN" 
+                style={{ width: '30px', height: '30px', objectFit: 'contain' }} 
+              />
+              BNN Kota Manado
+            </h3>
             <p>Hadir sebagai pilar utama pencegahan dan pemberdayaan di Ibu Kota Sulawesi Utara, BNN Kota Manado berkomitmen mewujudkan masyarakat 
             yang bersih dari penyalahgunaan narkoba.</p>
           </div>
