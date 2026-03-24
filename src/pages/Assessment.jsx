@@ -304,6 +304,8 @@ const Assessment = () => {
                 <option value="wenang">Wenang</option>
                 <option value="singkil">Singkil</option>
                 <option value="tuminting">Tuminting</option>
+                <option value="wanea">Wanea</option>
+                <option value="paal2">Paal II</option>
                 <option value="mapanget">Mapanget</option>
               </select>
             </div>
