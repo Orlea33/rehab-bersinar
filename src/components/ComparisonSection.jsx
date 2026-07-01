@@ -5,7 +5,7 @@ const ComparisonSection = () => {
         <h2>Sistem Dua Kelompok Penelitian</h2>
         <p>Partisipan dibagi secara acak untuk mengukur efektivitas sistem rekomendasi</p>
       </div>
-      
+
       <div className="comparison-grid">
         <div className="comparison-card a">
           <h3 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>🤖 Kelompok A</h3>
@@ -17,7 +17,7 @@ const ComparisonSection = () => {
             <li>✅ Explainable AI</li>
           </ul>
         </div>
-        
+
         <div className="comparison-card feature">
           <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>📊 Variabel Diukur</h3>
           <h4 style={{ marginBottom: '0.5rem' }}>Metrik Evaluasi</h4>
@@ -27,7 +27,7 @@ const ComparisonSection = () => {
             <li>😊 Kepuasan pengguna</li>
           </ul>
         </div>
-        
+
         <div className="comparison-card b">
           <h3 style={{ color: 'var(--gray)', marginBottom: '1rem' }}>📚 Kelompok B</h3>
           <h4 style={{ marginBottom: '0.5rem' }}>Sistem Konvensional</h4>

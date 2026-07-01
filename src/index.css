@@ -171,6 +171,105 @@ body {
     background: black !important;
 }
 
+/* Navigation Profile Dropdown */
+.nav-profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-trigger {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.chevron-icon {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.chevron-icon.open {
+    transform: rotate(180deg);
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0.5rem;
+    list-style: none;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 1100;
+    transform-origin: top right;
+    animation: dropdownFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.profile-dropdown a,
+.profile-dropdown .logout-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.6rem 0.875rem !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #4b5563 !important;
+    text-decoration: none !important;
+    width: 100% !important;
+    border: none !important;
+    background: none !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.profile-dropdown a:hover {
+    background: #f3f4f6 !important;
+    color: var(--primary) !important;
+}
+
+.profile-dropdown .logout-btn:hover {
+    background: rgba(239, 68, 68, 0.08) !important;
+    color: var(--danger) !important;
+}
+
+.dropdown-icon {
+    flex-shrink: 0;
+}
+
+/* Mobile responsive for dropdown */
+@media (max-width: 768px) {
+    .profile-dropdown {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: #f9fafb;
+        margin-top: 0.5rem;
+        animation: none;
+        padding: 0.25rem;
+    }
+}
+
 /* Mobile Menu */
 .mobile-menu-btn {
     display: none;
@@ -2771,4 +2870,35 @@ footer {
 .posttest-summary {
     text-align: center;
     padding: 3rem 2rem;
+}
+
+/* --- CUSTOM MODERN SVG ICONS & SEARCH --- */
+.inline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -0.125em;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding-left: 2.75rem !important; /* give space for search icon on left */
+}
+
+.search-input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #9ca3af;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

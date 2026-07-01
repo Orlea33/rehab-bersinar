@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useToast } from '../context/ToastContext'
 import ContentCard from '../components/ContentCard'
 import ContentDetailModal from '../components/ContentDetailModal'
+import PosttestPromptModal from '../components/PosttestPromptModal'
 import {
   getContents,
   getRecommendations,
@@ -15,17 +16,42 @@ import {
   submitFeedback
 } from '../services/api'
 import questionsData from '../data/questions'
+import {
+  LayoutDashboard,
+  Sparkles,
+  BookOpen,
+  Activity,
+  Trophy,
+  ClipboardList,
+  Settings as SettingsIcon,
+  Target,
+  Bot,
+  Brain,
+  Clock,
+  Flame,
+  BarChart2,
+  CheckCircle,
+  Lock,
+  Star,
+  LogOut,
+  ArrowLeft,
+  ArrowRight,
+  TrendingUp,
+  Award,
+  Zap,
+  ClipboardCheck
+} from 'lucide-react'
 
 // ==================== SVG ICON HELPER ====================
 const Icon = ({ name }) => {
   const icons = {
-    overview: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>,
-    recommendations: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 2a10 10 0 0 1 10 10h-7V5l-3-3z"></path></svg>,
-    all: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>,
-    progress: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>,
-    achievements: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>,
-    posttest: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>,
-    settings: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    overview: <LayoutDashboard size={20} />,
+    recommendations: <Sparkles size={20} />,
+    all: <BookOpen size={20} />,
+    progress: <Activity size={20} />,
+    achievements: <Trophy size={20} />,
+    posttest: <ClipboardList size={20} />,
+    settings: <SettingsIcon size={20} />
   };
   return icons[name] || null;
 };
@@ -104,7 +130,9 @@ const DashboardAOverview = ({ recommended, other, onCardClick }) => {
     <div className="dashboard-section">
       <div className="dashboard-section-header">
         <div>
-          <h2>🎯 Rekomendasi Personal Untukmu</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Target size={24} style={{ color: 'var(--primary)' }} /> Rekomendasi Personal Untukmu
+          </h2>
           <p>Dipilih otomatis oleh model Random Forest berdasarkan profil dan aktivitas belajar kamu.</p>
         </div>
         <div className="dashboard-section-chip">
@@ -148,7 +176,9 @@ const DashboardBOverview = ({ contents, onCardClick }) => {
     <div className="dashboard-section">
       <div className="dashboard-section-header">
         <div>
-          <h2>📚 Semua Materi Edukasi</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <BookOpen size={24} style={{ color: 'var(--primary)' }} /> Semua Materi Edukasi
+          </h2>
           <p>Akses bebas ke seluruh konten edukasi. Pilih materi sesuai kebutuhanmu.</p>
         </div>
         <div className="dashboard-section-chip">
@@ -175,7 +205,9 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
     <div className="dashboard-section recommendations-page">
       <div className="dashboard-section-header">
         <div>
-          <h2>🤖 Semua Rekomendasi (Random Forest)</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Bot size={24} style={{ color: 'var(--primary)' }} /> Semua Rekomendasi (Random Forest)
+          </h2>
           <p>
             Daftar lengkap materi yang disarankan untukmu, sudah diurutkan dari yang paling relevan.
             Lihat juga alasan dan confidence score di setiap kartu.
@@ -191,8 +223,8 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
               showConfidence={true}
               onClick={() => onCardClick(item.materi)}
             />
-            <div className="recommendation-reason">
-              <strong>🧠 Alasan:</strong> {item.reason}
+            <div className="recommendation-reason" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Brain size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} /> <strong>Alasan:</strong> {item.reason}
             </div>
           </div>
         ))}
@@ -238,16 +270,18 @@ const Progress = ({ user, refreshKey }) => {
   const todayDayName = new Date().toLocaleDateString('id-ID', { weekday: 'short' });
 
   const statCards = [
-    { emoji: '⏱️', num: totalMinutes, label: 'Menit Belajar', color: '#3B82F6' },
-    { emoji: '🔥', num: streak, label: 'Hari Streak', color: '#EF4444' },
-    { emoji: '📊', num: `${consistency}%`, label: 'Konsistensi', color: '#3B82F6' },
-    { emoji: '🏆', num: posttest_score || '-', label: 'Skor Akhir', color: '#F59E0B' }
+    { icon: Clock, num: totalMinutes, label: 'Menit Belajar', color: '#3B82F6' },
+    { icon: Flame, num: streak, label: 'Hari Streak', color: '#EF4444' },
+    { icon: BarChart2, num: `${consistency}%`, label: 'Konsistensi', color: '#3B82F6' },
+    { icon: Trophy, num: posttest_score || '-', label: 'Skor Akhir', color: '#F59E0B' }
   ];
 
   return (
     <div className="progress-universal">
       <div className="progress-header-flex">
-        <h2 className="progress-title">📈 Ringkasan Belajar</h2>
+        <h2 className="progress-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <TrendingUp size={24} style={{ color: 'var(--primary)' }} /> Log aktivitas
+        </h2>
         <div className="user-badge-premium">Grup {user?.group || 'B'}</div>
       </div>
 
@@ -277,15 +311,20 @@ const Progress = ({ user, refreshKey }) => {
         {/* Kartu Statistik - Swipe di Mobile, Grid di Desktop */}
         <div className="stats-cards-scroll-container">
           <div className="stats-cards-track">
-            {statCards.map((card, i) => (
-              <div key={i} className="interactive-stat-card" style={{"--card-accent": card.color}}>
-                <div className="stat-card-icon">{card.emoji}</div>
-                <div className="stat-card-data">
-                  <span className="data-val">{card.num}</span>
-                  <span className="data-lbl">{card.label}</span>
+            {statCards.map((card, i) => {
+              const IconComponent = card.icon;
+              return (
+                <div key={i} className="interactive-stat-card" style={{"--card-accent": card.color}}>
+                  <div className="stat-card-icon" style={{ color: card.color }}>
+                    <IconComponent size={24} />
+                  </div>
+                  <div className="stat-card-data">
+                    <span className="data-val">{card.num}</span>
+                    <span className="data-lbl">{card.label}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -326,6 +365,26 @@ const Achievements = ({ user }) => {
   const [achievements, setAchievements] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const renderAchievementIcon = (iconStr) => {
+    const styles = { verticalAlign: 'middle', width: '40px', height: '40px' };
+    switch (iconStr) {
+      case '🏆':
+        return <Trophy size={40} style={{ ...styles, color: '#F59E0B' }} />;
+      case '🔥':
+        return <Flame size={40} style={{ ...styles, color: '#EF4444' }} />;
+      case '📚':
+        return <BookOpen size={40} style={{ ...styles, color: '#10B981' }} />;
+      case '🎯':
+        return <Target size={40} style={{ ...styles, color: '#3B82F6' }} />;
+      case '🎓':
+        return <GraduationCap size={40} style={{ ...styles, color: '#8B5CF6' }} />;
+      case '⚡':
+        return <Zap size={40} style={{ ...styles, color: '#FBBF24' }} />;
+      default:
+        return <Award size={40} style={{ ...styles, color: 'var(--primary)' }} />;
+    }
+  };
+
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
@@ -354,7 +413,9 @@ const Achievements = ({ user }) => {
   return (
     <div className="achievements-modern">
       <div className="achievements-header-modern">
-        <h2>🏆 Achievements</h2>
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Trophy size={28} style={{ color: 'var(--primary)' }} /> Achievements
+        </h2>
         <div className="achievement-counter">
           <span className="counter-num">{unlockedCount}</span>/<span>{achievements.length}</span> Terbuka
         </div>
@@ -363,12 +424,14 @@ const Achievements = ({ user }) => {
       <div className="achievement-grid-modern">
         {achievements.map(ach => (
           <div key={ach.name} className={`achievement-card-modern ${ach.unlocked ? 'unlocked' : 'locked'}`}>
-            <div className="achievement-icon-modern">{ach.icon}</div>
+            <div className="achievement-icon-modern">{renderAchievementIcon(ach.icon)}</div>
             <div className="achievement-info">
               <h4>{ach.name}</h4>
               <p>{ach.desc}</p>
               {ach.unlocked ? (
-                <span className="unlocked-date">✅ Terbuka</span>
+                <span className="unlocked-date" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <CheckCircle size={14} /> Terbuka
+                </span>
               ) : (
                 <div className="achievement-progress-modern">
                   <div className="progress-bar-ach">
@@ -378,7 +441,11 @@ const Achievements = ({ user }) => {
                 </div>
               )}
             </div>
-            {!ach.unlocked && <div className="lock-icon">🔒</div>}
+            {!ach.unlocked && (
+              <div className="lock-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', top: '1rem', right: '1rem', position: 'absolute' }}>
+                <Lock size={18} style={{ color: '#cbd5e1' }} />
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -447,7 +514,7 @@ const PostTest = ({ onComplete, user }) => {
       await submitPosttest({ answers, score })
       onComplete(score, answers)
       setSubmitted(true)
-      showToast(`✅ Post-test selesai! Skor: ${score}/${questionsData.length}`)
+      showToast(`Post-test selesai! Skor: ${score}/${questionsData.length}`)
     } catch (error) {
       showToast('Gagal menyimpan post-test')
       console.error(error)
@@ -465,7 +532,7 @@ const PostTest = ({ onComplete, user }) => {
   if (alreadySubmitted) {
     return (
       <div className="assessment-container posttest-summary">
-        <h2>📝 Post-Test Sudah Dikerjakan</h2>
+        <h2><ClipboardList size={22} className="inline-icon" /> Post-Test Sudah Dikerjakan</h2>
         <p>Anda telah menyelesaikan post-test. Terima kasih.</p>
         <p>Skor Anda dapat dilihat di halaman Progress.</p>
       </div>
@@ -475,7 +542,7 @@ const PostTest = ({ onComplete, user }) => {
   if (submitted) {
     return (
       <div className="assessment-container posttest-summary">
-        <h2>📝 Post-Test Selesai</h2>
+        <h2><ClipboardList size={22} className="inline-icon" /> Post-Test Selesai</h2>
         <p>Terima kasih telah mengerjakan post-test.</p>
         <p>Skor Anda: {Object.values(answers).filter(v => v === 'correct').length}/{questionsData.length}</p>
       </div>
@@ -484,7 +551,7 @@ const PostTest = ({ onComplete, user }) => {
 
   return (
     <div className="assessment-container posttest-modern">
-      <h2>📝 Post-Test Pengetahuan</h2>
+      <h2><ClipboardList size={22} className="inline-icon" /> Post-Test Pengetahuan</h2>
       <p>Jawablah pertanyaan berikut untuk mengukur pemahaman Anda setelah belajar.</p>
 
       <div className="posttest-header">
@@ -516,8 +583,8 @@ const PostTest = ({ onComplete, user }) => {
 
       <div className="posttest-actions">
         {currentPage > 0 && (
-          <button className="btn btn-outline" onClick={handlePrev}>
-            ← Sebelumnya
+          <button className="btn btn-outline" onClick={handlePrev} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <ArrowLeft size={16} /> Sebelumnya
           </button>
         )}
         {currentPage < totalPages - 1 ? (
@@ -525,16 +592,18 @@ const PostTest = ({ onComplete, user }) => {
             className="btn btn-white"
             onClick={handleNext}
             disabled={!isCurrentPageComplete}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
           >
-            Selanjutnya →
+            Selanjutnya <ArrowRight size={16} />
           </button>
         ) : (
           <button
             className="btn btn-white"
             onClick={handleSubmit}
             disabled={!isCurrentPageComplete}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
           >
-            Selesai & Kirim
+            Selesai & Kirim <ArrowRight size={16} />
           </button>
         )}
       </div>
@@ -562,7 +631,7 @@ const Settings = ({ user, onLogout }) => {
     try {
       // updateUserProfile tanpa userId
       await updateUserProfile({ nama, usia: parseInt(usia), gender })
-      showToast('✅ Profil berhasil diperbarui')
+      showToast('Profil berhasil diperbarui')
     } catch (error) {
       showToast('Gagal memperbarui profil')
       console.error(error)
@@ -593,7 +662,7 @@ const Settings = ({ user, onLogout }) => {
 
   return (
     <div className="settings-modern">
-      <h2>⚙️ Pengaturan Akun</h2>
+      <h2><SettingsIcon size={22} className="inline-icon" /> Pengaturan Akun</h2>
 
       <div className="settings-section-modern">
         <h3>Feedback & Penilaian</h3>
@@ -603,18 +672,30 @@ const Settings = ({ user, onLogout }) => {
         <div className="settings-form">
           <div className="form-group-modern">
             <label>Rating (1-5)</label>
-            <div style={{ display: 'flex', gap: '0.5rem', fontSize: '2rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               {[1,2,3,4,5].map(star => (
-                <span
+                <button
+                  type="button"
                   key={star}
                   onClick={() => !loading && setRating(star)}
+                  disabled={loading}
                   style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
                     cursor: loading ? 'not-allowed' : 'pointer',
-                    color: star <= rating ? '#F59E0B' : '#e5e7eb'
+                    color: star <= rating ? '#F59E0B' : '#cbd5e1',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justify: 'center'
                   }}
                 >
-                  ★
-                </span>
+                  <Star
+                    size={28}
+                    fill={star <= rating ? '#F59E0B' : 'none'}
+                    stroke={star <= rating ? '#F59E0B' : '#cbd5e1'}
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -651,8 +732,9 @@ const Settings = ({ user, onLogout }) => {
           className="btn-danger-modern"
           onClick={onLogout}
           disabled={loading}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}
         >
-          🚪 Keluar dari Akun
+          <LogOut size={18} /> Keluar dari Akun
         </button>
       </div>
     </div>
@@ -670,6 +752,7 @@ const Dashboard = () => {
   const [allContents, setAllContents] = useState([])
   const [selectedContent, setSelectedContent] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [showPosttestPrompt, setShowPosttestPrompt] = useState(false)
 
   const [refreshProgressKey, setRefreshProgressKey] = useState(0);
 
@@ -687,8 +770,16 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        const contentsRes = await getContents()
+        const [contentsRes, progressRes] = await Promise.all([
+          getContents(),
+          getUserProgress()
+        ])
         setAllContents(contentsRes.data)
+
+        // Tampilkan pengingat post-test jika pengguna belum mengerjakannya
+        if (progressRes.data.posttest_score === null && !sessionStorage.getItem('dismissedPosttestPrompt')) {
+          setShowPosttestPrompt(true)
+        }
 
         if (user.group === 'A') {
           // getRecommendations tanpa parameter
@@ -711,6 +802,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     if (window.confirm('Apakah Anda yakin ingin logout?')) {
+      sessionStorage.removeItem('dismissedPosttestPrompt')
       logout()
       navigate('/')
     }
@@ -720,7 +812,7 @@ const Dashboard = () => {
     try {
       // submitPosttest tanpa user_id
       await submitPosttest({ answers, score })
-      showToast('✅ Post-test berhasil disimpan!')
+      showToast('Post-test berhasil disimpan!')
     } catch (error) {
       showToast('Gagal menyimpan post-test')
       console.error(error)
@@ -767,6 +859,17 @@ const Dashboard = () => {
           onClose={() => setShowModal(false)}
           user={user}
           onInteractionComplete={refreshProgress}
+        />
+      )}
+      {showPosttestPrompt && (
+        <PosttestPromptModal
+          isOpen={showPosttestPrompt}
+          onClose={() => setShowPosttestPrompt(false)}
+          onConfirm={() => {
+            setShowPosttestPrompt(false)
+            setActiveTab('posttest')
+          }}
+          user={user}
         />
       )}
     </div>

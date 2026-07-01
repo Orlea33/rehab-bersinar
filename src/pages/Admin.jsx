@@ -7,6 +7,16 @@ import AdminUsers from '../components/admin/AdminUsers'
 import AdminMaterials from '../components/admin/AdminMaterials'
 import AdminFeedbacks from '../components/admin/AdminFeedbacks'
 import AdminSettings from '../components/admin/AdminSettings'
+import { 
+  LayoutDashboard, 
+  Users, 
+  BookOpen, 
+  MessageSquare, 
+  Settings as SettingsIcon, 
+  Globe, 
+  Shield,
+  User
+} from 'lucide-react'
 import './Admin.css'
 
 const Admin = () => {
@@ -32,25 +42,53 @@ const Admin = () => {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <h2>Admin Panel</h2>
+        <div className="admin-sidebar-header">
+          <div className="admin-logo">
+            <Shield className="logo-svg" size={24} />
+            <span>Admin Bersinar</span>
+          </div>
+        </div>
+        
         <ul>
           <li className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>
-            📊 Dashboard
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
           </li>
           <li className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>
-            👥 Pengguna
+            <Users size={18} />
+            <span>Pengguna</span>
           </li>
           <li className={activeTab === 'materials' ? 'active' : ''} onClick={() => setActiveTab('materials')}>
-            📚 Materi
+            <BookOpen size={18} />
+            <span>Materi</span>
           </li>
           <li className={activeTab === 'feedbacks' ? 'active' : ''} onClick={() => setActiveTab('feedbacks')}>
-            💬 Feedback
+            <MessageSquare size={18} />
+            <span>Feedback</span>
           </li>
           <li className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
-            ⚙️ Settings
+            <SettingsIcon size={18} />
+            <span>Settings</span>
+          </li>
+          <li className="back-to-home" onClick={() => navigate('/')}>
+            <Globe size={18} />
+            <span>Lihat Website</span>
           </li>
         </ul>
+
+        <div className="admin-sidebar-footer">
+          <div className="admin-profile-card">
+            <div className="admin-avatar">
+              <User size={18} className="avatar-svg" />
+            </div>
+            <div className="admin-profile-info">
+              <span className="admin-name">{user?.nama}</span>
+              <span className="admin-role">Administrator</span>
+            </div>
+          </div>
+        </div>
       </div>
+      
       <div className="admin-content">
         {activeTab === 'dashboard' && <AdminDashboard />}
         {activeTab === 'users' && <AdminUsers />}

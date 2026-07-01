@@ -1,6 +1,20 @@
 // ContentDetailModal.jsx
 import { useState, useEffect } from 'react';
 import { trackOpen, trackClose, trackComplete } from '../services/api';
+import { Clock, Play, FileText, Image as ImageIcon } from 'lucide-react';
+
+const renderModalTypeIcon = (type) => {
+  switch (type?.toLowerCase()) {
+    case 'video':
+      return <Play size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />;
+    case 'artikel':
+      return <FileText size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />;
+    case 'infografis':
+      return <ImageIcon size={16} style={{ verticalAlign: 'middle', marginRight: '4px' }} />;
+    default:
+      return null;
+  }
+};
 
 const ReadMoreText = ({ text, previewLength = 200 }) => {
   const [showFull, setShowFull] = useState(false);
@@ -151,8 +165,12 @@ const handleMarkComplete = () => {
         <button className="modal-close" onClick={handleClose}>×</button>
         <h2>{content.title}</h2>
         <div className="modal-meta">
-          <span>{content.icon} {content.type}</span>
-          <span>⏱️ {content.duration} menit</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', textTransform: 'uppercase' }}>
+            {renderModalTypeIcon(content.type)} {content.type}
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <Clock size={16} /> {content.duration} menit
+          </span>
           {content.confidence > 0 && (
             <span className="confidence">Match: {content.confidence}%</span>
           )}

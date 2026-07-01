@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getAdminUsers } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { exportToCSV } from '../../utils/exportToCSV';
+import { Download } from 'lucide-react';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -50,7 +51,8 @@ const AdminUsers = () => {
           <p className="admin-content-subtitle">Lihat data lengkap peserta dan ekspor ke CSV untuk analisis lebih lanjut.</p>
         </div>
         <button className="export-btn" onClick={handleExport}>
-          ⬇️ Ekspor CSV
+          <Download size={16} />
+          <span>Ekspor CSV</span>
         </button>
       </div>
       <div className="admin-table-wrapper">

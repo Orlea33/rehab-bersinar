@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PreTest from '../components/PreTest';
 import { register } from '../services/api';
+import { ArrowLeft, ArrowRight, Rocket, Bot } from 'lucide-react';
 
 const Assessment = () => {
   const [step, setStep] = useState(1);
@@ -181,7 +182,7 @@ const Assessment = () => {
       {step === 1 && (
         <div className="form-step active" id="step-1">
           <h3 style={{ marginBottom: '1.5rem' }}>Registrasi & Data Diri</h3>
-          
+
           <div className="form-group">
             <label>Nama Lengkap</label>
             <input type="text" id="nama" placeholder="Masukkan nama lengkap" value={formData.nama} onChange={handleChange} />
@@ -268,7 +269,7 @@ const Assessment = () => {
           <div className="form-row">
             <div className="form-group">
               <label>Usia</label>
-              <input type="number" id="usia" min="15" max="70" placeholder="25" value={formData.usia} onChange={handleChange} />
+              <input type="number" id="usia" min="15" max="60" placeholder="Silahkan masukkan usia anda" value={formData.usia} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label>Jenis Kelamin</label>
@@ -318,17 +319,17 @@ const Assessment = () => {
             </label>
           </div>
 
-          <button className="btn btn-white" onClick={handleNext} style={{ width: '100%', marginTop: '1rem' }}>
-            Daftar & Lanjut →
+          <button className="btn btn-white" onClick={handleNext} style={{ width: '100%', marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            Daftar & Lanjut <ArrowRight size={16} />
           </button>
         </div>
       )}
 
       {/* Step 2: Pre-test (menggunakan komponen PreTest) */}
       {step === 2 && (
-        <PreTest 
-          onComplete={handlePretestComplete} 
-          initialAnswers={pretestAnswers} 
+        <PreTest
+          onComplete={handlePretestComplete}
+          initialAnswers={pretestAnswers}
         />
       )}
 
@@ -336,7 +337,7 @@ const Assessment = () => {
       {step === 3 && (
         <div className="form-step active" id="step-3">
           <h3 style={{ marginBottom: '1.5rem' }}>Preferensi Belajar</h3>
-          
+
           <div className="form-group">
             <label>Format konten yang paling Anda sukai:</label>
             <select id="format" value={formData.format} onChange={handleChange}>
@@ -348,10 +349,10 @@ const Assessment = () => {
             </select>
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Waktu luang per hari untuk belajar (menit):</label>
             <input type="number" id="waktu" min="10" max="180" placeholder="30" value={formData.waktu} onChange={handleChange} />
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label>Topik yang paling ingin Anda pelajari:</label>
@@ -367,11 +368,11 @@ const Assessment = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-outline" onClick={handlePrev} style={{ flex: 1 }}>
-              ← Kembali
+            <button className="btn btn-outline" onClick={handlePrev} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <ArrowLeft size={16} /> Kembali
             </button>
-            <button className="btn btn-white" onClick={handleSubmit} disabled={loading} style={{ flex: 1 }}>
-              {loading ? 'Memproses...' : '🚀 Selesai & Lihat Dashboard'}
+            <button className="btn btn-white" onClick={handleSubmit} disabled={loading} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              {loading ? 'Memproses...' : <><Rocket size={16} /> Selesai & Lihat Dashboard</>}
             </button>
           </div>
         </div>
@@ -380,9 +381,11 @@ const Assessment = () => {
       {/* Step 4: RF Processing (khusus kelompok A) */}
       {step === 4 && (
         <div className="rf-processing active" id="rf-processing">
-          <h3 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>🤖 Random Forest Processing</h3>
+          <h3 style={{ color: 'var(--accent)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Bot size={20} /> Random Forest Processing
+          </h3>
           <p>Sistem sedang menganalisis 100 decision trees...</p>
-          
+
           <div className="forest-container">
             <div className="tree"></div>
             <div className="tree"></div>
@@ -392,13 +395,13 @@ const Assessment = () => {
             <div className="tree"></div>
             <div className="tree"></div>
           </div>
-          
+
           <div style={{ background: 'var(--light-gray)', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
             <p style={{ fontSize: '0.875rem', color: 'var(--gray)' }}>
               <strong>Input Features:</strong><br />
-              Usia: {formData.usia} | 
-              Pendidikan: {formData.pendidikan === '1' ? 'SD' : formData.pendidikan === '2' ? 'SMP' : 'SMA'} | 
-              Format: {formData.format} | 
+              Usia: {formData.usia} |
+              Pendidikan: {formData.pendidikan === '1' ? 'SD' : formData.pendidikan === '2' ? 'SMP' : 'SMA'} |
+              Format: {formData.format} |
               Pre-test: {pretestScore}/15
             </p>
           </div>

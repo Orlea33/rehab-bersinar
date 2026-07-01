@@ -1,3 +1,5 @@
+import { MapPin } from 'lucide-react';
+
 const About = () => {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -17,7 +19,7 @@ const About = () => {
         </ul>
 
         <h3 style={{ margin: '2rem 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          📍 Lokasi BNN Kota Manado
+          <MapPin size={22} style={{ color: 'var(--primary)', marginRight: '0.25rem' }} /> Lokasi BNN Kota Manado
         </h3>
         <div style={{ 
           background: 'white', 

@@ -1,3 +1,18 @@
+import { Clock, Play, FileText, Image as ImageIcon } from 'lucide-react';
+
+const renderTypeIcon = (type) => {
+  switch (type?.toLowerCase()) {
+    case 'video':
+      return <Play size={24} style={{ color: 'white' }} />;
+    case 'artikel':
+      return <FileText size={24} style={{ color: 'white' }} />;
+    case 'infografis':
+      return <ImageIcon size={24} style={{ color: 'white' }} />;
+    default:
+      return null;
+  }
+};
+
 const ContentCard = ({ content, showConfidence = false, onClick }) => {
   return (
     <div className="content-card" onClick={onClick}>
@@ -5,7 +20,9 @@ const ContentCard = ({ content, showConfidence = false, onClick }) => {
         {content.imageUrl ? (
           <img src={content.imageUrl} alt={content.title} />
         ) : (
-          <span>{content.icon}</span>
+          <div className="content-type-icon-fallback" style={{ background: 'var(--primary)', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justify: 'center' }}>
+            {renderTypeIcon(content.type)}
+          </div>
         )}
         {content.recommended && showConfidence && (
           <div className="card-badge recommended">TOP PICK</div>
@@ -13,7 +30,9 @@ const ContentCard = ({ content, showConfidence = false, onClick }) => {
       </div>
       <div className="card-content">
         <div className="card-meta">
-          <span>⏱️ {content.duration} menit</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <Clock size={14} /> {content.duration} menit
+          </span>
           <span>{content.type.toUpperCase()}</span>
         </div>
         <h3>{content.title}</h3>
