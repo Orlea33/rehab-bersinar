@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react'
 import ContentCard from './ContentCard'
 import contentsData from '../data/contents'
+import { getContents } from '../services/api'
 
 const FeaturedContent = ({ onCardClick }) => {
   const [contents, setContents] = useState([])
 
   useEffect(() => {
-    // Sementara pakai data statis, nanti bisa fetch dari API
-    setContents(contentsData)
+    const fetchFeatured = async () => {
+      try {
+        const res = await getContents()
+        setContents(res.data)
+      } catch (error) {
+        console.error("Gagal memuat materi unggulan dari server, menggunakan data cadangan:", error)
+        setContents(contentsData)
+      }
+    }
+    fetchFeatured()
   }, [])
 
   return (
