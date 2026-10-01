@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../context/ToastContext'
@@ -124,52 +124,393 @@ const Sidebar = ({ activeTab, setActiveTab, user }) => {
   )
 }
 
+// ==================== LEVEL BADGE HELPER ====================
+const levelColor = (level) => {
+  if (level === 'Sangat Dibutuhkan') return '#EF4444'
+  if (level === 'Dibutuhkan') return '#F59E0B'
+  return '#6B7280'
+}
+
 // ==================== DASHBOARD A - OVERVIEW ====================
 const DashboardAOverview = ({ recommended, other, onCardClick }) => {
+  const totalRecommended = recommended.length + other.length
+
   return (
     <div className="dashboard-section">
-      <div className="dashboard-section-header">
+
+      {/* ================= HEADER ================= */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #eef6ff 0%, #f8fbff 100%)',
+          border: '1px solid #dbeafe',
+          borderRadius: '20px',
+          padding: '1.5rem',
+          marginBottom: '1.5rem'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            flexWrap: 'wrap'
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 10px',
+                borderRadius: '999px',
+                background: '#ffffff',
+                color: 'var(--primary)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                marginBottom: '0.75rem',
+                border: '1px solid #dbeafe'
+              }}
+            >
+              <Sparkles size={14} />
+              Materi untuk Anda
+            </div>
+
+            <h2
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                margin: 0,
+                fontSize: '1.5rem'
+              }}
+            >
+              <BookOpen size={25} style={{ color: 'var(--primary)' }} />
+              Rekomendasi Materi Belajar
+            </h2>
+
+            <p
+              style={{
+                margin: '0.6rem 0 0',
+                color: '#64748b',
+                lineHeight: 1.6,
+                maxWidth: '720px'
+              }}
+            >
+              Berikut adalah materi edukasi yang direkomendasikan
+              berdasarkan hasil assessment dan profil belajar Anda.
+              Materi diurutkan dari yang paling sesuai untuk dipelajari.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '14px',
+              padding: '0.75rem 1rem',
+              minWidth: '150px',
+              textAlign: 'center'
+            }}
+          >
+            <div
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                color: 'var(--primary)'
+              }}
+            >
+              {totalRecommended}
+            </div>
+
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: '#64748b'
+              }}
+            >
+              Materi direkomendasikan
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {/* ================= INFO REKOMENDASI ================= */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.75rem',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '16px',
+          padding: '1rem 1.1rem',
+          marginBottom: '1.5rem'
+        }}
+      >
+        <div
+          style={{
+            width: '34px',
+            height: '34px',
+            minWidth: '34px',
+            borderRadius: '10px',
+            background: '#e0edff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--primary)'
+          }}
+        >
+          <Brain size={18} />
+        </div>
+
         <div>
-          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Target size={24} style={{ color: 'var(--primary)' }} /> Rekomendasi Personal Untukmu
-          </h2>
-          <p>Dipilih otomatis oleh model Random Forest berdasarkan profil dan aktivitas belajar kamu.</p>
-        </div>
-        <div className="dashboard-section-chip">
-          <span className="chip-dot" /> Mode Kelompok A • Rekomendasi adaptif
+          <strong
+            style={{
+              display: 'block',
+              marginBottom: '3px',
+              color: '#1e293b'
+            }}
+          >
+            Bagaimana materi ini dipilih?
+          </strong>
+
+          <span
+            style={{
+              fontSize: '0.88rem',
+              color: '#64748b',
+              lineHeight: 1.5
+            }}
+          >
+            Sistem menganalisis data assessment Anda untuk menentukan
+            materi yang paling sesuai. Anda dapat langsung memilih
+            materi di bawah untuk mulai belajar.
+          </span>
         </div>
       </div>
 
-      <div className="content-grid dashboard-grid">
-        {recommended.map(content => (
-          <ContentCard
-            key={content.id}
-            content={content}
-            showConfidence={true}
-            onClick={() => onCardClick(content)}
-          />
-        ))}
-      </div>
 
+      {/* ================= MATERI UTAMA ================= */}
       <div className="dashboard-section-sub">
-        <div className="dashboard-section-sub-header">
-          <h3>Materi Lainnya</h3>
-          <p>Eksplorasi materi tambahan di luar rekomendasi utama untuk memperluas wawasanmu.</p>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '1rem',
+            marginBottom: '1rem',
+            flexWrap: 'wrap'
+          }}
+        >
+          <div>
+            <h3
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.3rem'
+              }}
+            >
+              <Target
+                size={20}
+                style={{ color: 'var(--primary)' }}
+              />
+
+              Materi yang Disarankan untuk Anda
+            </h3>
+
+            <p
+              style={{
+                margin: 0,
+                color: '#64748b',
+                fontSize: '0.88rem'
+              }}
+            >
+              Mulai dari materi berikut untuk mendapatkan pembelajaran
+              yang sesuai dengan hasil assessment Anda.
+            </p>
+          </div>
+
+          <div
+            style={{
+              fontSize: '0.8rem',
+              color: '#64748b',
+              background: '#f1f5f9',
+              padding: '7px 12px',
+              borderRadius: '999px'
+            }}
+          >
+            {recommended.length} materi utama
+          </div>
         </div>
+
+
         <div className="content-grid dashboard-grid">
-          {other.map(content => (
-            <ContentCard
+          {recommended.map((content, index) => (
+            <div
               key={content.id}
-              content={content}
-              onClick={() => onCardClick(content)}
-            />
+              className="recommendation-item"
+              style={{
+                position: 'relative'
+              }}
+            >
+
+              {/* NOMOR URUT */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  left: '10px',
+                  zIndex: 2,
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: 'var(--primary)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  boxShadow: '0 3px 8px rgba(0,0,0,0.12)'
+                }}
+              >
+                {index + 1}
+              </div>
+
+              <ContentCard
+                content={content}
+                showConfidence={false}
+                onClick={() => onCardClick(content)}
+              />
+
+              {/* LABEL */}
+              <div
+                style={{
+                  marginTop: '0.65rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.82rem',
+                  color: '#64748b'
+                }}
+              >
+                <CheckCircle
+                  size={15}
+                  style={{ color: '#10B981' }}
+                />
+
+                Direkomendasikan untuk Anda
+              </div>
+            </div>
           ))}
         </div>
       </div>
+
+
+      {/* ================= MATERI LAINNYA ================= */}
+      {other.length > 0 && (
+        <div
+          className="dashboard-section-sub"
+          style={{
+            marginTop: '2rem'
+          }}
+        >
+
+          <div
+            style={{
+              marginBottom: '1rem'
+            }}
+          >
+            <h3
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.3rem'
+              }}
+            >
+              <BookOpen
+                size={20}
+                style={{ color: 'var(--primary)' }}
+              />
+
+              Materi Rekomendasi Lainnya
+            </h3>
+
+            <p
+              style={{
+                margin: 0,
+                color: '#64748b',
+                fontSize: '0.88rem'
+              }}
+            >
+              Materi tambahan yang juga dapat membantu memperluas
+              pengetahuan Anda.
+            </p>
+          </div>
+
+
+          <div className="content-grid dashboard-grid">
+            {other.map((item) => (
+              <div
+                key={item.id}
+                className="recommendation-item"
+              >
+
+                <ContentCard
+                  content={item}
+                  showConfidence={false}
+                  onClick={() => onCardClick(item)}
+                />
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    marginTop: '0.65rem',
+                    fontSize: '0.82rem',
+                    color: '#64748b'
+                  }}
+                >
+                  <Sparkles
+                    size={14}
+                    style={{ color: 'var(--primary)' }}
+                  />
+
+                  Materi tambahan yang direkomendasikan
+                </div>
+
+              </div>
+            ))}
+          </div>
+
+        </div>
+      )}
+
+
+      {/* ================= FOOTNOTE ================= */}
+      <div
+        style={{
+          marginTop: '1.5rem',
+          padding: '0.85rem 1rem',
+          borderTop: '1px solid #e5e7eb',
+          color: '#94a3b8',
+          fontSize: '0.78rem',
+          textAlign: 'center'
+        }}
+      >
+        Rekomendasi materi dihasilkan oleh sistem berdasarkan
+        data assessment yang Anda berikan.
+      </div>
+
     </div>
   )
 }
-
 // ==================== DASHBOARD B - OVERVIEW ====================
 const DashboardBOverview = ({ contents, onCardClick }) => {
   return (
@@ -199,7 +540,7 @@ const DashboardBOverview = ({ contents, onCardClick }) => {
   )
 }
 
-// ==================== REKOMENDASI PAGE (khusus Grup A) ====================
+// ==================== REKOMENDASI PAGE ====================
 const RecommendationsPage = ({ recommendations, onCardClick }) => {
   return (
     <div className="dashboard-section recommendations-page">
@@ -223,8 +564,25 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
               showConfidence={true}
               onClick={() => onCardClick(item.materi)}
             />
-            <div className="recommendation-reason" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Brain size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} /> <strong>Alasan:</strong> {item.reason}
+            <div
+              className="recommendation-reason"
+              style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginTop: '0.5rem' }}
+            >
+              <Brain size={16} style={{ color: 'var(--primary)', flexShrink: 0, marginTop: 2 }} />
+              <div style={{ fontSize: '0.85rem' }}>
+                <div>
+                  <strong>{item.category}</strong>
+                  {' • '}
+                  <span style={{ color: levelColor(item.level), fontWeight: 600 }}>
+                    {item.level}
+                  </span>
+                  {/* {' • '} */}
+                  {((item.confidence || 0) * 100).toFixed(1)}%
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#6B7280', marginTop: 2 }}>
+                  {item.reason}
+                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -233,8 +591,6 @@ const RecommendationsPage = ({ recommendations, onCardClick }) => {
   )
 }
 
-// ==================== PROGRESS ====================
-// Komponen ini sekarang menggunakan user dari props, tapi API dipanggil tanpa parameter
 // ==================== PROGRESS ====================
 const Progress = ({ user, refreshKey }) => {
   const { showToast } = useToast()
@@ -267,7 +623,6 @@ const Progress = ({ user, refreshKey }) => {
   const { total_materi, completed_count, total_duration, streak, consistency, pretest_score, posttest_score } = progress
   const percentage = total_materi > 0 ? Math.round((completed_count / total_materi) * 100) : 0
   const totalMinutes = Math.round(total_duration / 60)
-  const todayDayName = new Date().toLocaleDateString('id-ID', { weekday: 'short' });
 
   const statCards = [
     { icon: Clock, num: totalMinutes, label: 'Menit Belajar', color: '#3B82F6' },
@@ -286,7 +641,6 @@ const Progress = ({ user, refreshKey }) => {
       </div>
 
       <div className="progress-top-grid">
-        {/* Ringkasan Utama dengan Animasi Lingkaran */}
         <div className="main-stats-card">
           <div className="circular-container">
             <svg viewBox="0 0 36 36" className="circular-chart">
@@ -308,13 +662,12 @@ const Progress = ({ user, refreshKey }) => {
           </div>
         </div>
 
-        {/* Kartu Statistik - Swipe di Mobile, Grid di Desktop */}
         <div className="stats-cards-scroll-container">
           <div className="stats-cards-track">
             {statCards.map((card, i) => {
               const IconComponent = card.icon;
               return (
-                <div key={i} className="interactive-stat-card" style={{"--card-accent": card.color}}>
+                <div key={i} className="interactive-stat-card" style={{ "--card-accent": card.color }}>
                   <div className="stat-card-icon" style={{ color: card.color }}>
                     <IconComponent size={24} />
                   </div>
@@ -329,7 +682,6 @@ const Progress = ({ user, refreshKey }) => {
         </div>
       </div>
 
-      {/* Grafik Aktivitas Interaktif */}
       <div className="activity-chart-card">
         <div className="activity-header">
           <h3>Aktivitas Minggu Ini</h3>
@@ -359,7 +711,6 @@ const Progress = ({ user, refreshKey }) => {
 }
 
 // ==================== ACHIEVEMENTS ====================
-// Komponen ini menggunakan user dari props, API tanpa parameter
 const Achievements = ({ user }) => {
   const { showToast } = useToast()
   const [achievements, setAchievements] = useState([])
@@ -377,7 +728,7 @@ const Achievements = ({ user }) => {
       case '🎯':
         return <Target size={40} style={{ ...styles, color: '#3B82F6' }} />;
       case '🎓':
-        return <GraduationCap size={40} style={{ ...styles, color: '#8B5CF6' }} />;
+        return <Award size={40} style={{ ...styles, color: '#8B5CF6' }} />;
       case '⚡':
         return <Zap size={40} style={{ ...styles, color: '#FBBF24' }} />;
       default:
@@ -388,7 +739,7 @@ const Achievements = ({ user }) => {
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
-        const res = await getUserAchievements() // tanpa parameter
+        const res = await getUserAchievements()
         setAchievements(res.data)
       } catch (error) {
         showToast('Gagal memuat achievements')
@@ -453,8 +804,6 @@ const Achievements = ({ user }) => {
   )
 }
 
-// ==================== POST-TEST ====================
-// Menerima prop user, tapi submitPosttest tanpa user_id
 // ==================== POST-TEST ====================
 const PostTest = ({ onComplete, user }) => {
   const { showToast } = useToast()
@@ -612,7 +961,6 @@ const PostTest = ({ onComplete, user }) => {
 }
 
 // ==================== SETTINGS ====================
-// Menerima prop user, tapi panggilan API tanpa userId
 const Settings = ({ user, onLogout }) => {
   const { showToast } = useToast()
   const [nama, setNama] = useState(user?.nama || '')
@@ -629,7 +977,6 @@ const Settings = ({ user, onLogout }) => {
     }
     setLoading(true)
     try {
-      // updateUserProfile tanpa userId
       await updateUserProfile({ nama, usia: parseInt(usia), gender })
       showToast('Profil berhasil diperbarui')
     } catch (error) {
@@ -647,7 +994,6 @@ const Settings = ({ user, onLogout }) => {
     }
     setLoading(true)
     try {
-      // submitFeedback tanpa user_id
       await submitFeedback({ rating, comment })
       showToast('Terima kasih atas feedback Anda!')
       setComment('')
@@ -673,7 +1019,7 @@ const Settings = ({ user, onLogout }) => {
           <div className="form-group-modern">
             <label>Rating (1-5)</label>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {[1,2,3,4,5].map(star => (
+              {[1, 2, 3, 4, 5].map(star => (
                 <button
                   type="button"
                   key={star}
@@ -748,6 +1094,7 @@ const Dashboard = () => {
   const { showToast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [recommended, setRecommended] = useState([])
+  const [otherRecommended, setOtherRecommended] = useState([])   // ← BARU
   const [recommendations, setRecommendations] = useState([])
   const [allContents, setAllContents] = useState([])
   const [selectedContent, setSelectedContent] = useState(null)
@@ -760,9 +1107,8 @@ const Dashboard = () => {
     setRefreshProgressKey(prev => prev + 1);
   };
 
-
   useEffect(() => {
-    if (loading) return; // Tunggu sampi loading selesai
+    if (loading) return;
     if (!user) {
       navigate('/assessment')
       return
@@ -776,20 +1122,39 @@ const Dashboard = () => {
         ])
         setAllContents(contentsRes.data)
 
-        // Tampilkan pengingat post-test jika pengguna belum mengerjakannya
         if (progressRes.data.posttest_score === null && !sessionStorage.getItem('dismissedPosttestPrompt')) {
           setShowPosttestPrompt(true)
         }
 
         if (user.group === 'A') {
-          // getRecommendations tanpa parameter
           const recRes = await getRecommendations()
           setRecommendations(recRes.data)
-          setRecommended(recRes.data.slice(0, 3).map(item => ({
+
+          // Helper: enrich item RF supaya ContentCard bisa baca confidence, category, level
+          const enrich = (item) => ({
             ...item.materi,
             confidence: item.confidence,
-            recommended: true
-          })))
+            category: item.category,
+            level: item.level,
+            reason: item.reason,
+            category_rank: item.category_rank,
+            recommended: true,
+          })
+
+          // Top Pick: 3 materi teratas dari RF
+          setRecommended(recRes.data.slice(0, 3).map(enrich))
+
+          // Materi Lainnya: sisa ranking RF (rank 4+), dedup 1 per kategori
+          const seen = new Set()
+          const other = recRes.data
+            .slice(3)
+            .filter((item) => {
+              if (seen.has(item.category)) return false
+              seen.add(item.category)
+              return true
+            })
+            .map(enrich)
+          setOtherRecommended(other)
         }
       } catch (error) {
         showToast('Gagal memuat data')
@@ -810,7 +1175,6 @@ const Dashboard = () => {
 
   const handlePostTestComplete = async (score, answers) => {
     try {
-      // submitPosttest tanpa user_id
       await submitPosttest({ answers, score })
       showToast('Post-test berhasil disimpan!')
     } catch (error) {
@@ -836,10 +1200,10 @@ const Dashboard = () => {
         {activeTab === 'overview' && (
           isGroupA
             ? <DashboardAOverview
-                recommended={recommended}
-                other={allContents.filter(c => !recommended.some(r => r.id === c.id))}
-                onCardClick={handleCardClick}
-              />
+              recommended={recommended}
+              other={otherRecommended}
+              onCardClick={handleCardClick}
+            />
             : <DashboardBOverview contents={allContents} onCardClick={handleCardClick} />
         )}
         {isGroupA && activeTab === 'recommendations' && (

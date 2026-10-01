@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Clock, Play, FileText, Image as ImageIcon } from 'lucide-react';
+import { getThumbnail } from '../utils/thumbnail';   // ← TAMBAH
 
 const renderTypeIcon = (type) => {
   switch (type?.toLowerCase()) {
@@ -16,18 +17,29 @@ const renderTypeIcon = (type) => {
 
 const ContentCard = ({ content, showConfidence = false, onClick }) => {
   const [imgError, setImgError] = useState(false);
+  const thumb = getThumbnail(content);   // ← TAMBAH
 
   return (
     <div className="content-card" onClick={onClick}>
       <div className="card-image">
-        {content.imageUrl && !imgError ? (
-          <img 
-            src={content.imageUrl} 
-            alt={content.title} 
-            onError={() => setImgError(true)} 
+        {thumb && !imgError ? (
+          <img
+            src={thumb}
+            alt={content.title}
+            onError={() => setImgError(true)}
           />
         ) : (
-          <div className="content-type-icon-fallback" style={{ background: 'var(--primary)', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justify: 'center' }}>
+          <div
+            className="content-type-icon-fallback"
+            style={{
+              background: 'var(--primary)',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'   // ← fix: tadi 'justify'
+            }}
+          >
             {renderTypeIcon(content.type)}
           </div>
         )}

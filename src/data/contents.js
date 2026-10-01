@@ -25,12 +25,12 @@ const contents = [
 
                         Semua menyediakan sarana dan prasarana rehabilitasi dengan kualitas tinggi dan gratis.`,
     videoUrl: "https://www.youtube.com/embed/qcCe8nfXP3A", // nanti ganti dengan URL asli
-    imageUrl:"/images/pengenalan.rehabilitasi.png",
+    imageUrl: "/images/pengenalan.rehabilitasi.png",
     category: "program",
     recommended: true,
     confidence: 95
   },
-   {
+  {
     id: 2,
     title: "Pengertian Narkoba dan Bahaya Narkoba bagi Kesehatan",
     type: "artikel",
@@ -59,9 +59,9 @@ const contents = [
   Penggunaan narkoba hanya boleh untuk kepentingan medis di bawah pengawasan dokter. Penyalahgunaan di luar itu berpotensi merusak fisik, mental, dan sosial.`,
 
     sources: [
-      { 
-        name: "BNN - Pengertian & Bahaya Narkoba", 
-        link: "https://bnn.go.id/pengertian-narkoba-dan-bahaya-narkoba-bagi-kesehatan" 
+      {
+        name: "BNN - Pengertian & Bahaya Narkoba",
+        link: "https://bnn.go.id/pengertian-narkoba-dan-bahaya-narkoba-bagi-kesehatan"
       }
     ],
     category: "pengetahuan",
@@ -97,7 +97,7 @@ const contents = [
     duration: "3",
     icon: "🎥",
     description: "Program lanjutan BNN RI melalui pendekatan Intervensi Berbasis Masyarakat (IBM).",
-    fullDescription:`Video ini menjelaskan tentang layanan Pasca Rehabilitasi yang diselenggarakan oleh BNN RI sebagai bentuk rehabilitasi berkelanjutan. Program ini berfokus pada:
+    fullDescription: `Video ini menjelaskan tentang layanan Pasca Rehabilitasi yang diselenggarakan oleh BNN RI sebagai bentuk rehabilitasi berkelanjutan. Program ini berfokus pada:
     
       1. Pendekatan Intervensi Berbasis Masyarakat (IBM): Strategi pemulihan yang dilakukan dari, oleh, dan untuk masyarakat.
       2. Peran Agen Pemulihan: Anggota masyarakat yang dilatih BNN untuk mendampingi klien di tingkat desa atau kelurahan.
@@ -108,7 +108,7 @@ const contents = [
     `,
     videoUrl: "https://www.youtube.com/embed/VyTUwGahWAw", // nanti ganti dengan URL asli
     imageUrl: "/images/program.png",
-    category:"program",
+    category: "program",
     recommended: false,
     confidence: 0
   },
@@ -129,7 +129,7 @@ const contents = [
     duration: "10",
     icon: "🎥",
     description: "Edukasi komprehensif mengenai definisi narkoba, jenis-jenisnya berdasarkan golongan, dampak negatif bagi kesehatan.",
-    fullDescription:`Video edukasi ini membahas secara mendalam tentang bahaya narkoba bagi remaja dan masyarakat umum, yang mencakup:
+    fullDescription: `Video edukasi ini membahas secara mendalam tentang bahaya narkoba bagi remaja dan masyarakat umum, yang mencakup:
 
     1. Definisi Narkoba: Zat yang memengaruhi pikiran, perasaan, dan perilaku, serta menyebabkan ketergantungan fisik dan mental.
     2. Penggolongan Narkoba: Penjelasan mengenai Narkotika, Psikotropika, dan Bahan Adiktif lainnya, serta pembagian Golongan I, II, dan III berdasarkan risiko kecanduan.
@@ -138,8 +138,8 @@ const contents = [
     5. Strategi Pencegahan: Langkah praktis untuk menghindar, mulai dari meningkatkan iman, selektif memilih teman, hingga berani berkata "TIDAK" pada tawaran yang mencurigakan.
 
     Video ini juga menekankan pentingnya peran BNN dan Kepolisian dalam menangani masalah narkotika di Indonesia.`,
-    videoUrl:"https://www.youtube.com/embed/ZhYszcLbDIo",
-    imageUrl:"/images/narkoba.png",
+    videoUrl: "https://www.youtube.com/embed/ZhYszcLbDIo",
+    imageUrl: "/images/narkoba.png",
     category: "pengetahuan",
     recommended: false,
     confidence: 0
@@ -151,7 +151,7 @@ const contents = [
     duration: " 3",
     icon: "📄",
     description: "Panduan bagi keluarga dalam upaya mencegah penyalahgunaan narkoba pada pada anak.",
-    fullDescription:`Keluarga adalah garis pertahanan terdepan dalam mencegah penyalahgunaan narkoba. Infografis ini merangkum 5 pilar utama peran orang tua:
+    fullDescription: `Keluarga adalah garis pertahanan terdepan dalam mencegah penyalahgunaan narkoba. Infografis ini merangkum 5 pilar utama peran orang tua:
       1. Komunikasi Terbuka: Menciptakan ruang aman di mana anak merasa didengar tanpa dihakimi, sehingga mereka lebih terbuka mengenai masalahnya.
       2. Penanaman Karakter: Membekali anak dengan nilai kejujuran dan keberanian untuk berkata "TIDAK" pada tekanan teman sebaya.
       3. Pengawasan Reflektif: Mengenali lingkungan pertemanan dan perubahan perilaku anak dengan pendekatan kasih sayang, bukan otoriter.
@@ -159,7 +159,7 @@ const contents = [
       5. Keteladanan: Menyadari bahwa perilaku orang tua adalah contoh nyata yang akan ditiru oleh anak dalam mengambil keputusan.
 
       Investasi waktu dan perhatian hari ini adalah kunci masa depan anak yang bebas dari narkoba.`,
-    imageUrl:"/images/peran.keluarga.png",
+    imageUrl: "/images/peran.keluarga.png",
     category: "keluarga",
     recommended: false,
     confidence: 0
@@ -171,7 +171,7 @@ const contents = [
     duration: "3",
     icon: "📊",
     description: "Strategi mencegah kambuh setelah rehabilitasi.",
-    fullDescription:`Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
+    fullDescription: `Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
 
     Kekambuhan biasanya terjadi melalui tiga tahapan. Dimulai dari tahap emosional, ketika seseorang mulai merasa stres, lelah, atau tertekan. Kemudian berlanjut ke tahap mental, di mana muncul pikiran atau keinginan untuk kembali menggunakan. Jika tidak ditangani, tahap ini dapat berakhir pada relapse fisik, yaitu penggunaan kembali zat terlarang.
 
@@ -192,7 +192,7 @@ const contents = [
     duration: "5",
     icon: "🎥",
     description: "memahami alur layanan IBM dan peran IBM dalam maryarakat",
-    fullDescription:`Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
+    fullDescription: `Relapse atau kekambuhan sering terjadi dalam proses pemulihan dari ketergantungan narkoba. Namun penting untuk dipahami bahwa relapse bukanlah kegagalan, melainkan bagian dari proses pemulihan yang membutuhkan perhatian dan dukungan.
 
     Kekambuhan biasanya terjadi melalui tiga tahapan. Dimulai dari tahap emosional, ketika seseorang mulai merasa stres, lelah, atau tertekan. Kemudian berlanjut ke tahap mental, di mana muncul pikiran atau keinginan untuk kembali menggunakan. Jika tidak ditangani, tahap ini dapat berakhir pada relapse fisik, yaitu penggunaan kembali zat terlarang.
 
@@ -201,7 +201,7 @@ const contents = [
     Tanda-tanda relapse juga dapat muncul secara fisik maupun psikologis. Secara fisik misalnya gejala putus zat, kelelahan ekstrem, atau sulit tidur. Sedangkan secara psikologis dapat berupa stres berat, kecemasan, depresi, hingga munculnya kembali kenangan masa lalu yang memicu keinginan menggunakan.
 
     Namun relapse dapat dicegah. Strategi pencegahan dapat dilakukan dengan mengelola stres melalui aktivitas positif seperti olahraga, hobi, atau kegiatan spiritual. Selain itu, penting untuk membangun sistem dukungan dengan menjauhi lingkungan yang berisiko serta aktif mengikuti kelompok pendukung atau sesi terapi.`,
-    videoUrl:"https://www.youtube.com/embed/RMngbWaNu-0",
+    videoUrl: "https://www.youtube.com/embed/RMngbWaNu-0",
     imageUrl: "/images/ibm.png", // placeholder https://via.placeholder.com/600x400?text=Infografis
     category: "program",
     recommended: false,
@@ -214,7 +214,7 @@ const contents = [
     duration: "3",
     icon: "📊",
     description: "Cara mengelola stess dapat di kontrol dalam diri kita sendiri dengan metode coping tools.",
-    fullDescription:`Materi ini menjelaskan cara menghadapi stres dengan strategi yang tepat:
+    fullDescription: `Materi ini menjelaskan cara menghadapi stres dengan strategi yang tepat:
     1. Definisi Alat Koping: Praktik dan kebiasaan untuk membantu seseorang menoleransi serta mengurangi stres dalam hidup.
     2. Hindari Koping Tidak Sehat: Penggunaan zat adiktif dan hubungan buruk hanya memberikan kelegaan sementara dan justru menciptakan masalah baru.
     3. Strategi Koping Sehat: Karena alat koping bersifat personal, penting untuk menemukan apa yang paling efektif bagi diri sendiri.
@@ -235,7 +235,7 @@ const contents = [
     duration: "3",
     icon: "📊",
     description: "Panduan pola hidup sehat serta langkah-langkah nyata hidup sehat.",
-    fullDescription:`Pola hidup sehat bukan hanya tentang makan makanan bergizi atau berolahraga, tetapi merupakan kebiasaan sehari-hari yang menjaga keseimbangan tubuh dan pikiran. 
+    fullDescription: `Pola hidup sehat bukan hanya tentang makan makanan bergizi atau berolahraga, tetapi merupakan kebiasaan sehari-hari yang menjaga keseimbangan tubuh dan pikiran. 
     Dengan mengonsumsi nutrisi seimbang, memperbanyak sayur dan buah, cukup minum air, beristirahat dengan baik, serta rutin melakukan aktivitas fisik, tubuh akan memiliki daya tahan yang lebih kuat terhadap berbagai penyakit.
 
     Sebaliknya, kebiasaan seperti mengonsumsi makanan olahan, gula berlebih, merokok, dan kurang aktivitas fisik dapat meningkatkan risiko penyakit kronis seperti obesitas, diabetes, penyakit jantung, stroke, dan hipertensi. 
@@ -252,7 +252,7 @@ const contents = [
     duration: "3",
     icon: "📊",
     description: "menjelaskan alur layanan rehabilitasi BNN mulai dari proses skrining, asesmen, hingga pilihan perawatan rawat jalan atau rawat inap bagi penyalahguna narkoba.",
-    fullDescription:`Proses rehabilitasi dimulai dari tahap pintu masuk yaitu skrining dan asesmen. Pada tahap ini dilakukan pemeriksaan awal untuk mengetahui kondisi klien, tingkat ketergantungan, serta faktor sosial yang mempengaruhi. Tahapan ini meliputi skrining, asesmen medis dan sosial, serta penyusunan rencana terapi yang sesuai dengan kebutuhan klien.
+    fullDescription: `Proses rehabilitasi dimulai dari tahap pintu masuk yaitu skrining dan asesmen. Pada tahap ini dilakukan pemeriksaan awal untuk mengetahui kondisi klien, tingkat ketergantungan, serta faktor sosial yang mempengaruhi. Tahapan ini meliputi skrining, asesmen medis dan sosial, serta penyusunan rencana terapi yang sesuai dengan kebutuhan klien.
 
       Setelah proses asesmen, klien dapat menjalani dua jenis layanan rehabilitasi, yaitu rawat jalan atau rawat inap.
 
@@ -289,9 +289,9 @@ Selanjutnya, melalui teknik restrukturisasi kognitif, individu dilatih untuk men
 
 CBT juga berperan penting dalam pencegahan kekambuhan (relapse prevention). Dengan memahami pemicu dan mempelajari cara mengatasinya, individu dapat lebih siap menghadapi situasi berisiko dan mempertahankan gaya hidup yang sehat serta bebas dari narkoba.`,
     sources: [
-      { 
-        name: "BNN - Pengertian Cognitive Behavioral Therapy (CBT)", 
-        link: "https://bnn.go.id/bnn-ri-lakukan-asistensi-cognitive-behavioural-therapy-sesuai/" 
+      {
+        name: "BNN - Pengertian Cognitive Behavioral Therapy (CBT)",
+        link: "https://bnn.go.id/bnn-ri-lakukan-asistensi-cognitive-behavioural-therapy-sesuai/"
       }
     ],
     category: "kesehatan",
