@@ -5,7 +5,6 @@ const PosttestPromptModal = ({ isOpen, onClose, onConfirm, user }) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
-    sessionStorage.setItem('dismissedPosttestPrompt', 'true');
     onClose();
   };
 

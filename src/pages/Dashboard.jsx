@@ -1122,7 +1122,12 @@ const Dashboard = () => {
         ])
         setAllContents(contentsRes.data)
 
-        if (progressRes.data.posttest_score === null && !sessionStorage.getItem('dismissedPosttestPrompt')) {
+        // Hapus sisa key sessionStorage lama jika ada
+        sessionStorage.removeItem('dismissedPosttestPrompt')
+
+        const posttestScore = progressRes.data?.posttest_score
+        const isPosttestCompleted = posttestScore !== null && posttestScore !== undefined && posttestScore !== ''
+        if (!isPosttestCompleted) {
           setShowPosttestPrompt(true)
         }
 
@@ -1167,7 +1172,6 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     if (window.confirm('Apakah Anda yakin ingin logout?')) {
-      sessionStorage.removeItem('dismissedPosttestPrompt')
       logout()
       navigate('/')
     }
@@ -1177,6 +1181,8 @@ const Dashboard = () => {
     try {
       await submitPosttest({ answers, score })
       showToast('Post-test berhasil disimpan!')
+      setShowPosttestPrompt(false)
+      refreshProgress()
     } catch (error) {
       showToast('Gagal menyimpan post-test')
       console.error(error)

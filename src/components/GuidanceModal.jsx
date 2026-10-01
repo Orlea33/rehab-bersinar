@@ -121,7 +121,7 @@ const GuidanceModal = ({ isOpen, onClose, onStartAssessment }) => {
                 <div className="guidance-step-text">
                   <h3>Langkah 2: Tentukan Preferensi Materi Edukasi</h3>
                   <p>
-                    Setelah menyelesaikan Pre-test, tentukan preferensi jenis materi Anda seperti format materi yang disukai (video, artikel, infografis), dan topik minat. Model Machine Learning (Random Forest) kami akan menyiapkan rekomendasi materi yang personal.
+                    Lengkapi profil, minat edukasi, tingkat kebutuhan materi (P1–P6), dan pre-test. Sistem akan menyusun rekomendasi materi secara personal berdasarkan profil dan kebutuhan belajarmu.
                   </p>
                 </div>
               </div>
