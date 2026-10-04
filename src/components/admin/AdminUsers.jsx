@@ -65,7 +65,7 @@ const AdminUsers = () => {
         </button>
       </div>
 
-      <div className="admin-table-wrapper">
+      <div className="admin-table-wrapper" style={{ overflowX: 'auto', maxWidth: '100%' }}>
         <table className="admin-table">
           <thead>
             <tr>
