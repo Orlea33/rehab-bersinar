@@ -30,10 +30,17 @@ const AdminUsers = () => {
       Nama: u.nama,
       Usia: u.usia,
       Gender: u.gender === 'L' ? 'Laki-laki' : 'Perempuan',
-      Pendidikan: u.pendidikan,
       Kecamatan: u.kecamatan,
-      'Pretest Score': u.pretest_score,
-      'Posttest Score': u.posttest_score ?? '-', // jika null tampilkan '-'
+      Status: u.status ?? '-',
+      'Minat Edukasi': u.minat_edukasi ?? '-',
+      P1: u.p1 ?? '-',
+      P2: u.p2 ?? '-',
+      P3: u.p3 ?? '-',
+      P4: u.p4 ?? '-',
+      P5: u.p5 ?? '-',
+      P6: u.p6 ?? '-',
+      'Pretest Score': u.pretest_score ?? '-',
+      'Posttest Score': u.posttest_score ?? '-',
       Group: u.group,
       Admin: u.is_admin ? 'Ya' : 'Tidak',
       'Tanggal Daftar': new Date(u.created_at).toLocaleDateString('id-ID')
@@ -48,13 +55,16 @@ const AdminUsers = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
         <div>
           <h2>Manajemen Pengguna</h2>
-          <p className="admin-content-subtitle">Lihat data lengkap peserta dan ekspor ke CSV untuk analisis lebih lanjut.</p>
+          <p className="admin-content-subtitle">
+            Lihat data lengkap peserta dan ekspor ke CSV untuk analisis lebih lanjut.
+          </p>
         </div>
         <button className="export-btn" onClick={handleExport}>
           <Download size={16} />
           <span>Ekspor CSV</span>
         </button>
       </div>
+
       <div className="admin-table-wrapper">
         <table className="admin-table">
           <thead>
@@ -63,8 +73,15 @@ const AdminUsers = () => {
               <th>Nama</th>
               <th>Usia</th>
               <th>Gender</th>
-              <th>Pendidikan</th>
               <th>Kecamatan</th>
+              <th>Status</th>
+              <th>Minat</th>
+              <th>P1</th>
+              <th>P2</th>
+              <th>P3</th>
+              <th>P4</th>
+              <th>P5</th>
+              <th>P6</th>
               <th>Pretest</th>
               <th>Posttest</th>
               <th>Group</th>
@@ -79,10 +96,17 @@ const AdminUsers = () => {
                 <td>{u.nama}</td>
                 <td>{u.usia}</td>
                 <td>{u.gender}</td>
-                <td>{u.pendidikan}</td>
                 <td>{u.kecamatan}</td>
-                <td>{u.pretest_score}/15</td>
-                <td>{u.posttest_score !== null ? `${u.posttest_score}/15` : '-'}</td>
+                <td>{u.status ?? '-'}</td>
+                <td>{u.minat_edukasi ?? '-'}</td>
+                <td>{u.p1 ?? '-'}</td>
+                <td>{u.p2 ?? '-'}</td>
+                <td>{u.p3 ?? '-'}</td>
+                <td>{u.p4 ?? '-'}</td>
+                <td>{u.p5 ?? '-'}</td>
+                <td>{u.p6 ?? '-'}</td>
+                <td>{u.pretest_score ?? '-'}/15</td>
+                <td>{u.posttest_score !== null && u.posttest_score !== undefined ? `${u.posttest_score}/15` : '-'}</td>
                 <td>{u.group}</td>
                 <td>{u.is_admin ? 'Ya' : 'Tidak'}</td>
                 <td>{new Date(u.created_at).toLocaleDateString('id-ID')}</td>

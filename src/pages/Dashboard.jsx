@@ -860,7 +860,6 @@ const PostTest = ({ onComplete, user }) => {
     })
 
     try {
-      await submitPosttest({ answers, score })
       onComplete(score, answers)
       setSubmitted(true)
       showToast(`Post-test selesai! Skor: ${score}/${questionsData.length}`)
@@ -1184,8 +1183,11 @@ const Dashboard = () => {
       setShowPosttestPrompt(false)
       refreshProgress()
     } catch (error) {
-      showToast('Gagal menyimpan post-test')
-      console.error(error)
+      // 👇 INI KUNCI UNTUK TAHU PENYEBABNYA
+      console.error('STATUS:', error.response?.status)
+      console.error('DATA:', error.response?.data)     // ← pesan dari FastAPI
+      console.error('PAYLOAD DIKIRIM:', { answers, score })
+      showToast(error.response?.data?.detail || 'Gagal menyimpan post-test')
     }
   }
 
